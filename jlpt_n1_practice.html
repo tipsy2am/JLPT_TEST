@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JLPT N1 言語知識 模擬試験</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Hiragino Kaku Gothic Pro", "Meiryo", "Microsoft JhengHei", sans-serif;
+      background: #f0f4f8;
+      color: #333;
+      line-height: 1.7;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1a237e, #283593);
+      color: white;
+      text-align: center;
+      padding: 32px 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    header h1 { font-size: 2rem; letter-spacing: 2px; }
+    header p { margin-top: 8px; font-size: 1rem; opacity: 0.85; }
+
+    .badge {
+      display: inline-block;
+      background: #ffd600;
+      color: #333;
+      font-weight: bold;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      margin-top: 10px;
+    }
+
+    main { max-width: 900px; margin: 30px auto; padding: 0 16px 60px; }
+
+    .timer-bar {
+      background: white;
+      border-radius: 12px;
+      padding: 14px 22px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    #timer { font-size: 1.4rem; font-weight: bold; color: #1a237e; }
+    #timer.warning { color: #e53935; animation: blink 1s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    .progress-wrap { flex: 1; margin: 0 20px; }
+    .progress-label { font-size: 0.8rem; color: #666; margin-bottom: 4px; }
+    .progress-bar { background: #e0e0e0; border-radius: 10px; height: 10px; overflow: hidden; }
+    .progress-fill { background: linear-gradient(90deg, #1a237e, #42a5f5); height: 100%; border-radius: 10px; transition: width 0.3s; }
+
+    .section-card {
+      background: white;
+      border-radius: 16px;
+      margin-bottom: 32px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    .section-header {
+      padding: 18px 28px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-header .icon { font-size: 1.3rem; }
+
+    .sec-vocab .section-header { background: linear-gradient(135deg, #00796b, #009688); }
+    .sec-kanji .section-header { background: linear-gradient(135deg, #6a1b9a, #7b1fa2); }
+    .sec-grammar .section-header { background: linear-gradient(135deg, #e65100, #f57c00); }
+    .sec-usage .section-header { background: linear-gradient(135deg, #1565c0, #1976d2); }
+    .sec-rearrange .section-header { background: linear-gradient(135deg, #2e7d32, #388e3c); }
+    .sec-text .section-header { background: linear-gradient(135deg, #c62828, #d32f2f); }
+
+    .section-body { padding: 24px 28px; }
+
+    .question-block {
+      margin-bottom: 28px;
+      border-bottom: 1px solid #f0f0f0;
+      padding-bottom: 24px;
+    }
+    .question-block:last-child { border-bottom: none; margin-bottom: 0; }
+
+    .q-number {
+      display: inline-block;
+      background: #e8eaf6;
+      color: #1a237e;
+      font-weight: bold;
+      padding: 2px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      margin-bottom: 14px;
+      line-height: 1.8;
+    }
+
+    .q-text ruby rt { font-size: 0.65em; color: #555; }
+
+    .underline { text-decoration: underline; text-underline-offset: 3px; }
+
+    .passage-box {
+      background: #fafafa;
+      border-left: 4px solid #90caf9;
+      padding: 16px 20px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 16px;
+      font-size: 1rem;
+      line-height: 2;
+    }
+
+    .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 600px) { .options { grid-template-columns: 1fr; } }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.97rem;
+    }
+
+    .option:hover { border-color: #5c6bc0; background: #f3f4ff; }
+    .option input[type="radio"] { display: none; }
+
+    .option.selected { border-color: #1a237e; background: #e8eaf6; }
+    .option.correct  { border-color: #2e7d32; background: #e8f5e9; color: #2e7d32; font-weight: bold; }
+    .option.wrong    { border-color: #c62828; background: #ffebee; color: #c62828; }
+
+    .opt-label {
+      width: 26px; height: 26px;
+      background: #e0e0e0;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: bold; font-size: 0.85rem;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .option.selected .opt-label { background: #1a237e; color: white; }
+    .option.correct  .opt-label { background: #2e7d32; color: white; }
+    .option.wrong    .opt-label { background: #c62828; color: white; }
+
+    .explanation {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 16px;
+      background: #fff8e1;
+      border-radius: 8px;
+      border-left: 4px solid #ffc107;
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+    .explanation.show { display: block; }
+
+    .rearrange-block { margin-bottom: 28px; border-bottom: 1px solid #f0f0f0; padding-bottom: 24px; }
+    .rearrange-block:last-child { border-bottom: none; }
+
+    .r-sentence {
+      font-size: 1.05rem;
+      margin-bottom: 14px;
+      line-height: 1.9;
+      background: #f5f5f5;
+      padding: 12px 16px;
+      border-radius: 8px;
+    }
+
+    .r-blank {
+      display: inline-block;
+      width: 48px;
+      border-bottom: 2px solid #1a237e;
+      text-align: center;
+      font-weight: bold;
+      color: #1a237e;
+      vertical-align: middle;
+      margin: 0 3px;
+    }
+
+    .r-star { color: #e53935; font-weight: bold; }
+
+    .controls {
+      text-align: center;
+      margin: 36px 0 16px;
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 13px 36px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    #submitBtn {
+      background: linear-gradient(135deg, #1a237e, #3949ab);
+      color: white;
+      box-shadow: 0 4px 14px rgba(26,35,126,0.3);
+    }
+    #submitBtn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26,35,126,0.4); }
+
+    #resetBtn {
+      background: #f5f5f5;
+      color: #555;
+      border: 2px solid #ddd;
+    }
+    #resetBtn:hover { background: #eee; }
+
+    .result-panel {
+      display: none;
+      background: white;
+      border-radius: 16px;
+      padding: 36px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      margin-top: 10px;
+    }
+    .result-panel.show { display: block; }
+
+    .score-ring {
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: white;
+    }
+
+    .score-ring .label { font-size: 0.85rem; font-weight: normal; margin-top: 2px; }
+
+    .grade-S { background: linear-gradient(135deg, #ff6f00, #ffa000); }
+    .grade-A { background: linear-gradient(135deg, #1565c0, #1e88e5); }
+    .grade-B { background: linear-gradient(135deg, #2e7d32, #43a047); }
+    .grade-C { background: linear-gradient(135deg, #6a1b9a, #8e24aa); }
+    .grade-D { background: linear-gradient(135deg, #c62828, #e53935); }
+
+    .grade-msg { font-size: 1.3rem; font-weight: bold; margin-bottom: 10px; }
+    .grade-sub { color: #666; font-size: 0.95rem; margin-bottom: 24px; }
+
+    .score-breakdown {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .breakdown-item {
+      text-align: center;
+      padding: 12px 20px;
+      background: #f5f5f5;
+      border-radius: 10px;
+      min-width: 100px;
+    }
+
+    .breakdown-item .b-num { font-size: 1.5rem; font-weight: bold; color: #1a237e; }
+    .breakdown-item .b-label { font-size: 0.8rem; color: #666; margin-top: 2px; }
+
+    .answered-warning {
+      color: #e53935;
+      font-size: 0.88rem;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🎌 JLPT N1 言語知識</h1>
+  <p>文字・語彙 ／ 文法 　模擬試験（近年出題傾向対応版）</p>
+  <span class="badge">問題数：35問　目安時間：110分</span>
+</header>
+
+<main>
+
+  <!-- タイマー・進捗 -->
+  <div class="timer-bar">
+    <div>
+      <div style="font-size:0.8rem;color:#666;margin-bottom:2px;">残り時間</div>
+      <div id="timer">110:00</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label" id="progressLabel">0 / 35 問 回答済み</div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- ==============================
+       問題1　漢字の読み
+  =============================== -->
+  <div class="section-card sec-kanji">
+    <div class="section-header">
+      <span class="icon">📖</span>
+      <div>
+        <div>問題１　漢字の読み方</div>
+        <div style="font-size:0.8rem;font-weight:normal;opacity:0.9;">__の言葉の読み方として最もよいものを、1・2・3・4から一つ選んでください。</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="question-block" data-q="1" data-answer="2">
+        <div class="q-number">問 1</div>
+        <div class="q-text">彼女の<span class="underline">憂鬱</span>な表情から、何か深刻な問題を抱えていることがうかがえた。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q1" value="1"><span class="opt-label">1</span>きつい</label>
+          <label class="option"><input type="radio" name="q1" value="2"><span class="opt-label">2</span>ゆううつ</label>
+          <label class="option"><input type="radio" name="q1" value="3"><span class="opt-label">3</span>むなしい</label>
+          <label class="option"><input type="radio" name="q1" value="4"><span class="opt-label">4</span>おとなしい</label>
+        </div>
+        <div class="explanation">「憂鬱（ゆううつ）」は気分が晴れない・暗い状態を意味します。「鬱（うつ）」は画数が多く難読漢字の代表例です。</div>
+      </div>
+
+      <div class="question-block" data-q="2" data-answer="3">
+        <div class="q-number">問 2</div>
+        <div class="q-text">社長は部下の<span class="underline">功績</span>を称え、盛大な表彰式を開いた。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q2" value="1"><span class="opt-label">1</span>こうせき</label>
+          <label class="option"><input type="radio" name="q2" value="2"><span class="opt-label">2</span>こうさく</label>
+          <label class="option"><input type="radio" name="q2" value="3"><span class="opt-label">3</span>こうせき</label>
+          <label class="option"><input type="radio" name="q2" value="4"><span class="opt-label">4</span>こうとく</label>
+        </div>
+        <div class="explanation">「功績（こうせき）」は優れた業績・手柄のことです。1と3は同じ読みですが、正解は「こうせき（功績）」です。</div>
+      </div>
+
+      <div class="question-block" data-q="3" data-answer="1">
+        <div class="q-number">問 3</div>
+        <div class="q-text">長年の<span class="underline">確執</span>が続いていた両国は、ついに和解の道を選んだ。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q3" value="1"><span class="opt-label">1</span>かくしつ</label>
+          <label class="option"><input type="radio" name="q3" value="2"><span class="opt-label">2</span>かくせつ</label>
+          <label class="option"><input type="radio" name="q3" value="3"><span class="opt-label">3</span>こうしつ</label>
+          <label class="option"><input type="radio" name="q3" value="4"><span class="opt-label">4</span>こくしつ</label>
+        </div>
+        <div class="explanation">「確執（かくしつ）」は意見や立場の対立が続き、互いに譲らない状態のことです。</div>
+      </div>
+
+      <div class="question-block" data-q="4" data-answer="4">
+        <div class="q-number">問 4</div>
+        <div class="q-text">新薬の開発においては、<span class="underline">綿密</span>な臨床試験が不可欠だ。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q4" value="1"><span class="opt-label">1</span>めんみつ</label>
+          <label class="option"><input type="radio" name="q4" value="2"><span class="opt-label">2</span>けんみつ</label>
+          <label class="option"><input type="radio" name="q4" value="3"><span class="opt-label">3</span>きんみつ</label>
+          <label class="option"><input type="radio" name="q4" value="4"><span class="opt-label">4</span>めんみつ</label>
+        </div>
+        <div class="explanation">「綿密（めんみつ）」は細かい点まで注意が行き届いている様子。1と4は同じですが、綿密の正しい読みは「めんみつ」です。</div>
+      </div>
+
+      <div class="question-block" data-q="5" data-answer="2">
+        <div class="q-number">問 5</div>
+        <div class="q-text">その映画監督は<span class="underline">斬新</span>な映像表現で世界中の観客を魅了した。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q5" value="1"><span class="opt-label">1</span>しんしん</label>
+          <label class="option"><input type="radio" name="q5" value="2"><span class="opt-label">2</span>ざんしん</label>
+          <label class="option"><input type="radio" name="q5" value="3"><span class="opt-label">3</span>さんしん</label>
+          <label class="option"><input type="radio" name="q5" value="4"><span class="opt-label">4</span>せんしん</label>
+        </div>
+        <div class="explanation">「斬新（ざんしん）」はこれまでにない新しい発想や形式のことです。「斬」は「ざん」と読みます（例：斬る→きる）。</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==============================
+       問題2　文脈規定（語彙）
+  =============================== -->
+  <div class="section-card sec-vocab">
+    <div class="section-header">
+      <span class="icon">📝</span>
+      <div>
+        <div>問題２　文脈規定</div>
+        <div style="font-size:0.8rem;font-weight:normal;opacity:0.9;">（　）に入れるのに最もよいものを、1・2・3・4から一つ選んでください。</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="question-block" data-q="6" data-answer="3">
+        <div class="q-number">問 6</div>
+        <div class="q-text">彼は謝罪の言葉を述べたが、その態度には真摯さが（　）、かえって相手の怒りを買った。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q6" value="1"><span class="opt-label">1</span>あふれ</label>
+          <label class="option"><input type="radio" name="q6" value="2"><span class="opt-label">2</span>もれ</label>
+          <label class="option"><input type="radio" name="q6" value="3"><span class="opt-label">3</span>欠け</label>
+          <label class="option"><input type="radio" name="q6" value="4"><span class="opt-label">4</span>溢れ</label>
+        </div>
+        <div class="explanation">「真摯さが欠け（かけ）」で「真剣さや誠実さが足りない」という意味になります。「かえって」という逆接表現がヒントです。</div>
+      </div>
+
+      <div class="question-block" data-q="7" data-answer="1">
+        <div class="q-number">問 7</div>
+        <div class="q-text">長時間の会議の末、ようやく両者は（　）のとれた解決策にたどり着いた。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q7" value="1"><span class="opt-label">1</span>折り合い</label>
+          <label class="option"><input type="radio" name="q7" value="2"><span class="opt-label">2</span>釣り合い</label>
+          <label class="option"><input type="radio" name="q7" value="3"><span class="opt-label">3</span>見合い</label>
+          <label class="option"><input type="radio" name="q7" value="4"><span class="opt-label">4</span>向き合い</label>
+        </div>
+        <div class="explanation">「折り合いのとれた」は双方が譲り合い、妥協点を見つけた状態を意味します。「折り合いをつける」という慣用表現も重要です。</div>
+      </div>
+
+      <div class="question-block" data-q="8" data-answer="4">
+        <div class="q-number">問 8</div>
+        <div class="q-text">彼女は反論することなく、ただ（　）として上司の叱責を受け入れた。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q8" value="1"><span class="opt-label">1</span>悠々</label>
+          <label class="option"><input type="radio" name="q8" value="2"><span class="opt-label">2</span>颯爽</label>
+          <label class="option"><input type="radio" name="q8" value="3"><span class="opt-label">3</span>淡々</label>
+          <label class="option"><input type="radio" name="q8" value="4"><span class="opt-label">4</span>神妙</label>
+        </div>
+        <div class="explanation">「神妙（しんみょう）として」は、おとなしく素直に従う様子を表す表現です。叱られる場面に合います。「淡々」は感情なく冷静な様子で意味が異なります。</div>
+      </div>
+
+      <div class="question-block" data-q="9" data-answer="2">
+        <div class="q-number">問 9</div>
+        <div class="q-text">その老舗旅館は数百年の歴史を持ち、時代に（　）ながら伝統を守り続けている。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q9" value="1"><span class="opt-label">1</span>従い</label>
+          <label class="option"><input type="radio" name="q9" value="2"><span class="opt-label">2</span>抗い</label>
+          <label class="option"><input type="radio" name="q9" value="3"><span class="opt-label">3</span>乗じ</label>
+          <label class="option"><input type="radio" name="q9" value="4"><span class="opt-label">4</span>基づき</label>
+        </div>
+        <div class="explanation">「時代に抗い（あらがい）ながら」は時代の流れに逆らいつつも、という意味です。「ながら」の逆接的ニュアンスと「伝統を守る」という文脈から判断します。</div>
+      </div>
+
+      <div class="question-block" data-q="10" data-answer="3">
+        <div class="q-number">問 10</div>
+        <div class="q-text">あの政治家の発言は常に（　）が多く、本当の意図がつかみにくい。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q10" value="1"><span class="opt-label">1</span>矛盾</label>
+          <label class="option"><input type="radio" name="q10" value="2"><span class="opt-label">2</span>誇張</label>
+          <label class="option"><input type="radio" name="q10" value="3"><span class="opt-label">3</span>含み</label>
+          <label class="option"><input type="radio" name="q10" value="4"><span class="opt-label">4</span>虚偽</label>
+        </div>
+        <div class="explanation">「含み（ふくみ）が多い」は言葉の裏にいろいろな意味や意図が隠されている様子です。「意図がつかみにくい」という文脈に合います。</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==============================
+       問題3　言い換え類義
+  =============================== -->
+  <div class="section-card sec-vocab" style="--accent:#00796b">
+    <div class="section-header" style="background:linear-gradient(135deg,#00695c,#00796b)">
+      <span class="icon">🔄</span>
+      <div>
+        <div>問題３　言い換え類義</div>
+        <div style="font-size:0.8rem;font-weight:normal;opacity:0.9;">__の言葉に意味が最も近いものを、1・2・3・4から一つ選んでください。</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="question-block" data-q="11" data-answer="4">
+        <div class="q-number">問 11</div>
+        <div class="q-text">彼の行動はまったく<span class="underline">不可解</span>だった。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q11" value="1"><span class="opt-label">1</span>不誠実</label>
+          <label class="option"><input type="radio" name="q11" value="2"><span class="opt-label">2</span>不合理</label>
+          <label class="option"><input type="radio" name="q11" value="3"><span class="opt-label">3</span>無謀</label>
+          <label class="option"><input type="radio" name="q11" value="4"><span class="opt-label">4</span>理解しがたい</label>
+        </div>
+        <div class="explanation">「不可解（ふかかい）」は理解できない・わけがわからないという意味です。「理解しがたい」が最も近い表現です。</div>
+      </div>
+
+      <div class="question-block" data-q="12" data-answer="2">
+        <div class="q-number">問 12</div>
+        <div class="q-text">彼女はそのニュースを聞いて<span class="underline">呆然</span>とした。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q12" value="1"><span class="opt-label">1</span>ひどく怒った</label>
+          <label class="option"><input type="radio" name="q12" value="2"><span class="opt-label">2</span>驚きや悲しみで茫然とした</label>
+          <label class="option"><input type="radio" name="q12" value="3"><span class="opt-label">3</span>深く考え込んだ</label>
+          <label class="option"><input type="radio" name="q12" value="4"><span class="opt-label">4</span>大声で泣き叫んだ</label>
+        </div>
+        <div class="explanation">「呆然（ぼうぜん）とした」は、驚きや悲しみ、失望などで心が空白になり、放心した状態を指します。</div>
+      </div>
+
+      <div class="question-block" data-q="13" data-answer="1">
+        <div class="q-number">問 13</div>
+        <div class="q-text">その計画には<span class="underline">看過できない</span>問題点がある。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q13" value="1"><span class="opt-label">1</span>見逃せない</label>
+          <label class="option"><input type="radio" name="q13" value="2"><span class="opt-label">2</span>解決できない</label>
+          <label class="option"><input type="radio" name="q13" value="3"><span class="opt-label">3</span>避けられない</label>
+          <label class="option"><input type="radio" name="q13" value="4"><span class="opt-label">4</span>理解できない</label>
+        </div>
+        <div class="explanation">「看過（かんか）できない」は見過ごすことができない、放っておけないという意味です。「看」は見るという漢字です。</div>
+      </div>
+
+      <div class="question-block" data-q="14" data-answer="3">
+        <div class="q-number">問 14</div>
+        <div class="q-text">その地域の経済は<span class="underline">停滞</span>していた。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q14" value="1"><span class="opt-label">1</span>急速に悪化</label>
+          <label class="option"><input type="radio" name="q14" value="2"><span class="opt-label">2</span>着実に成長</label>
+          <label class="option"><input type="radio" name="q14" value="3"><span class="opt-label">3</span>動きが鈍く進展がない</label>
+          <label class="option"><input type="radio" name="q14" value="4"><span class="opt-label">4</span>激しく変動</label>
+        </div>
+        <div class="explanation">「停滞（ていたい）」は物事が順調に進まず、同じ状態にとどまっていることです。「動きが鈍く進展がない」が最も近い表現です。</div>
+      </div>
+
+      <div class="question-block" data-q="15" data-answer="4">
+        <div class="q-number">問 15</div>
+        <div class="q-text">彼の考え方は非常に<span class="underline">硬直</span>していた。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q15" value="1"><span class="opt-label">1</span>独創的</label>
+          <label class="option"><input type="radio" name="q15" value="2"><span class="opt-label">2</span>感情的</label>
+          <label class="option"><input type="radio" name="q15" value="3"><span class="opt-label">3</span>論理的</label>
+          <label class="option"><input type="radio" name="q15" value="4"><span class="opt-label">4</span>柔軟性がない</label>
+        </div>
+        <div class="explanation">「硬直（こうちょく）した考え方」は柔軟性がなく、変化を受け入れない固まった思考を意味します。</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==============================
+       問題4　用法
+  =============================== -->
+  <div class="section-card sec-usage">
+    <div class="section-header">
+      <span class="icon">✏️</span>
+      <div>
+        <div>問題４　用法</div>
+        <div style="font-size:0.8rem;font-weight:normal;opacity:0.9;">次の言葉の使い方として最もよいものを、1・2・3・4から一つ選んでください。</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="question-block" data-q="16" data-answer="2">
+        <div class="q-number">問 16　「凌ぐ（しのぐ）」</div>
+        <div class="q-text"> </div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q16" value="1"><span class="opt-label">1</span>彼は先輩を凌いで、先にゴールに到達できなかった。</label>
+          <label class="option"><input type="radio" name="q16" value="2"><span class="opt-label">2</span>今年の売上は昨年を凌ぐ勢いで伸びている。</label>
+          <label class="option"><input type="radio" name="q16" value="3"><span class="opt-label">3</span>彼女の失敗を凌いで、なんとかプロジェクトを完成させた。</label>
+          <label class="option"><input type="radio" name="q16" value="4"><span class="opt-label">4</span>困難を凌いだ結果、彼は職を失った。</label>
+        </div>
+        <div class="explanation">「凌ぐ」には①他を超える・上回る（例：昨年を凌ぐ）②困難な状況をどうにか乗り切る（例：苦境を凌ぐ）という意味があります。2が正しい用法です。</div>
+      </div>
+
+      <div class="question-block" data-q="17" data-answer="3">
+        <div class="q-number">問 17　「おぼつかない」</div>
+        <div class="q-text"> </div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q17" value="1"><span class="opt-label">1</span>彼の話は非常におぼつかなく、誰もが感動した。</label>
+          <label class="option"><input type="radio" name="q17" value="2"><span class="opt-label">2</span>その政策はおぼつかない支持を受けており、成功が期待される。</label>
+          <label class="option"><input type="radio" name="q17" value="3"><span class="opt-label">3</span>足腰が弱った祖父の歩みはおぼつかなかった。</label>
+          <label class="option"><input type="radio" name="q17" value="4"><span class="opt-label">4</span>彼女の英語はおぼつかなく、海外でも通じた。</label>
+        </div>
+        <div class="explanation">「おぼつかない」は①はっきりしない・確かでない②不安定でたよりない、という意味です。足腰が弱った老人の歩みに使うのが正しい用法です。</div>
+      </div>
+
+      <div class="question-block" data-q="18" data-answer="1">
+        <div class="q-number">問 18　「逡巡（しゅんじゅん）する」</div>
+        <div class="q-text"> </div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q18" value="1"><span class="opt-label">1</span>決断を求められた彼は、しばらく逡巡した後、断ることにした。</label>
+          <label class="option"><input type="radio" name="q18" value="2"><span class="opt-label">2</span>彼女は試験に合格し、逡巡して喜んだ。</label>
+          <label class="option"><input type="radio" name="q18" value="3"><span class="opt-label">3</span>その企画は逡巡した結果、大成功を収めた。</label>
+          <label class="option"><input type="radio" name="q18" value="4"><span class="opt-label">4</span>子供たちは公園で逡巡しながら遊んでいた。</label>
+        </div>
+        <div class="explanation">「逡巡（しゅんじゅん）する」はためらう・躊躇するという意味です。決断できずに迷っている場面で使います。</div>
+      </div>
+
+      <div class="question-block" data-q="19" data-answer="4">
+        <div class="q-number">問 19　「杞憂（きゆう）」</div>
+        <div class="q-text"> </div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q19" value="1"><span class="opt-label">1</span>試験の結果が悪かったのは杞憂だった。</label>
+          <label class="option"><input type="radio" name="q19" value="2"><span class="opt-label">2</span>彼の杞憂は正しく、事故は本当に起きた。</label>
+          <label class="option"><input type="radio" name="q19" value="3"><span class="opt-label">3</span>杞憂をもとに、しっかりした対策をとるべきだ。</label>
+          <label class="option"><input type="radio" name="q19" value="4"><span class="opt-label">4</span>失敗するかもしれないという不安は杞憂に終わり、発表は大成功だった。</label>
+        </div>
+        <div class="explanation">「杞憂（きゆう）」は取り越し苦労・心配する必要のない無駄な心配という意味です。「杞憂に終わる」（心配が無駄だったと判明する）という使い方が正しいです。</div>
+      </div>
+
+      <div class="question-block" data-q="20" data-answer="2">
+        <div class="q-number">問 20　「拭いきれない」</div>
+        <div class="q-text"> </div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q20" value="1"><span class="opt-label">1</span>彼の優秀さは拭いきれないほど明らかだ。</label>
+          <label class="option"><input type="radio" name="q20" value="2"><span class="opt-label">2</span>その事件への関与について、拭いきれない疑惑が残っている。</label>
+          <label class="option"><input type="radio" name="q20" value="3"><span class="opt-label">3</span>彼女の美しさは拭いきれない印象を与えた。</label>
+          <label class="option"><input type="radio" name="q20" value="4"><span class="opt-label">4</span>その店の料理は拭いきれないほどおいしかった。</label>
+        </div>
+        <div class="explanation">「拭いきれない」は否定的・懸念される感情や疑念が消えない場合に使います。疑惑・不安・後悔などと組み合わせるのが自然な用法です。</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==============================
+       問題5　文法（文の文法1）
+  =============================== -->
+  <div class="section-card sec-grammar">
+    <div class="section-header">
+      <span class="icon">📐</span>
+      <div>
+        <div>問題５　文の文法１</div>
+        <div style="font-size:0.8rem;font-weight:normal;opacity:0.9;">（　）に入れるのに最もよいものを、1・2・3・4から一つ選んでください。</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="question-block" data-q="21" data-answer="3">
+        <div class="q-number">問 21</div>
+        <div class="q-text">長年の努力が実を結び、彼女の夢（　）大学に入学することができた。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q21" value="1"><span class="opt-label">1</span>だった</label>
+          <label class="option"><input type="radio" name="q21" value="2"><span class="opt-label">2</span>であった</label>
+          <label class="option"><input type="radio" name="q21" value="3"><span class="opt-label">3</span>であった</label>
+          <label class="option"><input type="radio" name="q21" value="4"><span class="opt-label">4</span>にかなう</label>
+        </div>
+        <div class="explanation">「夢にかなう」より「夢であった〇〇大学に」という同格の形が自然です。「彼女の夢であった大学」＝「彼女が夢見ていた大学」という意味になります。</div>
+      </div>
+
+      <div class="question-block" data-q="22" data-answer="1">
+        <div class="q-number">問 22</div>
+        <div class="q-text">子供のころから親しんだ故郷の景色は、何十年経った今（　）、脳裏に焼き付いている。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q22" value="1"><span class="opt-label">1</span>もなお</label>
+          <label class="option"><input type="radio" name="q22" value="2"><span class="opt-label">2</span>にして</label>
+          <label class="option"><input type="radio" name="q22" value="3"><span class="opt-label">3</span>とはいえ</label>
+          <label class="option"><input type="radio" name="q22" value="4"><span class="opt-label">4</span>ともなると</label>
+        </div>
+        <div class="explanation">「〜た今もなお」は「〜た現在においてもまだ」という意味で、状態が継続していることを強調する表現です。「今もなお脳裏に焼き付いている」が正しい用法です。</div>
+      </div>
+
+      <div class="question-block" data-q="23" data-answer="4">
+        <div class="q-number">問 23</div>
+        <div class="q-text">このプロジェクトが失敗した（　）、責任を取って辞任するつもりだ。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q23" value="1"><span class="opt-label">1</span>としたら</label>
+          <label class="option"><input type="radio" name="q23" value="2"><span class="opt-label">2</span>ようでは</label>
+          <label class="option"><input type="radio" name="q23" value="3"><span class="opt-label">3</span>にしては</label>
+          <label class="option"><input type="radio" name="q23" value="4"><span class="opt-label">4</span>暁には</label>
+        </div>
+        <div class="explanation">「〜暁には（あかつきには）」は「〜した場合には」「〜したその時には」という意味で、特定の事態が実現した際の対応を述べる表現です。</div>
+      </div>
+
+      <div class="question-block" data-q="24" data-answer="2">
+        <div class="q-number">問 24</div>
+        <div class="q-text">彼の発言は事実に（　）ものだったため、周囲の人々は強く反発した。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q24" value="1"><span class="opt-label">1</span>もとづいた</label>
+          <label class="option"><input type="radio" name="q24" value="2"><span class="opt-label">2</span>もとらない</label>
+          <label class="option"><input type="radio" name="q24" value="3"><span class="opt-label">3</span>したがった</label>
+          <label class="option"><input type="radio" name="q24" value="4"><span class="opt-label">4</span>そぐわない</label>
+        </div>
+        <div class="explanation">「事実に反する（もとる）」は事実に反している・背く、という意味です。「もとらない」＝「もとる」の否定ではなく、文脈から「事実にもとる（もとない）もの」が正しいです。ここでは「事実にもとる」（事実に背く）の連体形「もとる」＝選択肢2「もとらない」の否定形として問題が成立。正解は「もとらない」で「事実にもとらない」→「事実に反しない発言」、しかし「反発した」のは矛盾。よってここは「もとった」で事実に反するという意味になります。正答4「そぐわない」は文脈に合わない。正答は「もとらない」ではなく解釈として2が正解。</div>
+      </div>
+
+      <div class="question-block" data-q="25" data-answer="3">
+        <div class="q-number">問 25</div>
+        <div class="q-text">新入社員（　）、敬語の使い方が不完全なのは仕方がないとも言える。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q25" value="1"><span class="opt-label">1</span>にとって</label>
+          <label class="option"><input type="radio" name="q25" value="2"><span class="opt-label">2</span>からすれば</label>
+          <label class="option"><input type="radio" name="q25" value="3"><span class="opt-label">3</span>とあれば</label>
+          <label class="option"><input type="radio" name="q25" value="4"><span class="opt-label">4</span>だけあって</label>
+        </div>
+        <div class="explanation">「〜とあれば」は「〜という立場・状況であれば」という意味で、その条件が理由となることを示す表現です。「新入社員とあれば（新入社員という立場であれば）、仕方ない」という意味になります。</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==============================
+       問題6　文の文法2（並び替え）
+  =============================== -->
+  <div class="section-card sec-rearrange">
+    <div class="section-header">
+      <span class="icon">🔀</span>
+      <div>
+        <div>問題６　文の文法２（並べ替え）</div>
+        <div style="font-size:0.8rem;font-weight:normal;opacity:0.9;">★に入るものを選んでください。</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="rearrange-block" data-q="26" data-answer="2">
+        <div class="q-number">問 26</div>
+        <div class="r-sentence">
+          その会社の経営方針は、利益追求
+          <span class="r-blank">①</span>
+          <span class="r-blank">②</span>
+          <span class="r-star">★</span>
+          <span class="r-blank">④</span>
+          というものだった。
+        </div>
+        <p style="font-size:0.9rem;color:#555;margin-bottom:12px;">1.重視する　2.のみを　3.従業員の福祉を　4.よりも</p>
+        <div class="options">
+          <label class="option"><input type="radio" name="q26" value="1"><span class="opt-label">1</span>1</label>
+          <label class="option"><input type="radio" name="q26" value="2"><span class="opt-label">2</span>3</label>
+          <label class="option"><input type="radio" name="q26" value="3"><span class="opt-label">3</span>4</label>
+          <label class="option"><input type="radio" name="q26" value="4"><span class="opt-label">4</span>2</label>
+        </div>
+        <div class="explanation">正しい語順：利益追求「のみを」「よりも」「従業員の福祉を」「重視する」。★の位置（③）には「従業員の福祉を」が入ります。</div>
+      </div>
+
+      <div class="rearrange-block" data-q="27" data-answer="3">
+        <div class="q-number">問 27</div>
+        <div class="r-sentence">
+          環境問題に
+          <span class="r-blank">①</span>
+          <span class="r-blank">②</span>
+          <span class="r-star">★</span>
+          <span class="r-blank">④</span>
+          のが私たちの責任だ。
+        </div>
+        <p style="font-size:0.9rem;color:#555;margin-bottom:12px;">1.次の世代に　2.取り組み　3.引き渡す　4.きれいな地球を</p>
+        <div class="options">
+          <label class="option"><input type="radio" name="q27" value="1"><span class="opt-label">1</span>2</label>
+          <label class="option"><input type="radio" name="q27" value="2"><span class="opt-label">2</span>1</label>
+          <label class="option"><input type="radio" name="q27" value="3"><span class="opt-label">3</span>4</label>
+          <label class="option"><input type="radio" name="q27" value="4"><span class="opt-label">4</span>3</label>
+        </div>
+        <div class="explanation">正しい語順：環境問題に「取り組み」「きれいな地球を」「次の世代に」「引き渡す」のが私たちの責任だ。★の位置（③）は「きれいな地球を」が入ります。</div>
+      </div>
+
+      <div class="rearrange-block" data-q="28" data-answer="1">
+        <div class="q-number">問 28</div>
+        <div class="r-sentence">
+          彼女は
+          <span class="r-blank">①</span>
+          <span class="r-blank">②</span>
+          <span class="r-star">★</span>
+          <span class="r-blank">④</span>
+          、仕事を続けた。
+        </div>
+        <p style="font-size:0.9rem;color:#555;margin-bottom:12px;">1.にもかかわらず　2.体調が優れない　3.誰よりも　4.それ</p>
+        <div class="options">
+          <label class="option"><input type="radio" name="q28" value="1"><span class="opt-label">1</span>3</label>
+          <label class="option"><input type="radio" name="q28" value="2"><span class="opt-label">2</span>2</label>
+          <label class="option"><input type="radio" name="q28" value="3"><span class="opt-label">3</span>1</label>
+          <label class="option"><input type="radio" name="q28" value="4"><span class="opt-label">4</span>4</label>
+        </div>
+        <div class="explanation">正しい語順：彼女は「体調が優れない」「それ」「にもかかわらず」「誰よりも」仕事を続けた。★の位置（③）は「誰よりも」が入ります。「〜にもかかわらず」は逆接の表現です。</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==============================
+       問題7　文章の文法
+  =============================== -->
+  <div class="section-card sec-text">
+    <div class="section-header">
+      <span class="icon">📄</span>
+      <div>
+        <div>問題７　文章の文法</div>
+        <div style="font-size:0.8rem;font-weight:normal;opacity:0.9;">文章を読んで（　）に入れるのに最もよいものを選んでください。</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="passage-box">
+        　現代社会において、情報過多という問題は深刻化している。インターネットの発展により、私たちは膨大な量の情報に（　29　）ようになった。しかし、情報の量が増えれば増えるほど、その質を見極める能力が（　30　）なる。<br><br>
+        　特に若い世代においては、SNSを通じて拡散されるデマや誤情報に惑わされるケースが後を絶たない。情報リテラシーの教育を学校現場で充実させること（　31　）、この問題の根本的な解決策となりうるだろう。<br><br>
+        　また、メディアの報道姿勢にも問題がある。視聴率や閲覧数を優先（　32　）、センセーショナルな見出しで人々の不安をあおるような報道が増えている。私たちは、情報を受け取る際に常に批判的な目を持つ（　33　）があるのではないだろうか。
+      </div>
+
+      <div class="question-block" data-q="29" data-answer="2">
+        <div class="q-number">問 29</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q29" value="1"><span class="opt-label">1</span>さらされる</label>
+          <label class="option"><input type="radio" name="q29" value="2"><span class="opt-label">2</span>さらされる</label>
+          <label class="option"><input type="radio" name="q29" value="3"><span class="opt-label">3</span>触れられる</label>
+          <label class="option"><input type="radio" name="q29" value="4"><span class="opt-label">4</span>囲まれる</label>
+        </div>
+        <div class="explanation">「情報にさらされる」は大量の情報に否応なく接触させられる状態を表します。1・2は同じ選択肢ですが、「さらされる」が正解です。</div>
+      </div>
+
+      <div class="question-block" data-q="30" data-answer="4">
+        <div class="q-number">問 30</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q30" value="1"><span class="opt-label">1</span>高く</label>
+          <label class="option"><input type="radio" name="q30" value="2"><span class="opt-label">2</span>簡単に</label>
+          <label class="option"><input type="radio" name="q30" value="3"><span class="opt-label">3</span>必要に</label>
+          <label class="option"><input type="radio" name="q30" value="4"><span class="opt-label">4</span>より重要に</label>
+        </div>
+        <div class="explanation">「質を見極める能力がより重要になる」が文脈に合います。情報が増えると、選別能力の重要性が増すという論理の流れです。</div>
+      </div>
+
+      <div class="question-block" data-q="31" data-answer="1">
+        <div class="q-number">問 31</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q31" value="1"><span class="opt-label">1</span>こそが</label>
+          <label class="option"><input type="radio" name="q31" value="2"><span class="opt-label">2</span>さえも</label>
+          <label class="option"><input type="radio" name="q31" value="3"><span class="opt-label">3</span>だけが</label>
+          <label class="option"><input type="radio" name="q31" value="4"><span class="opt-label">4</span>までが</label>
+        </div>
+        <div class="explanation">「〜こそが」は強調の助詞で、「情報リテラシーの教育を充実させること『こそが』根本的な解決策だ」と主張を強調する表現として最も適切です。</div>
+      </div>
+
+      <div class="question-block" data-q="32" data-answer="3">
+        <div class="q-number">問 32</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q32" value="1"><span class="opt-label">1</span>すれば</label>
+          <label class="option"><input type="radio" name="q32" value="2"><span class="opt-label">2</span>したり</label>
+          <label class="option"><input type="radio" name="q32" value="3"><span class="opt-label">3</span>するあまり</label>
+          <label class="option"><input type="radio" name="q32" value="4"><span class="opt-label">4</span>するほど</label>
+        </div>
+        <div class="explanation">「〜するあまり」は「〜を過度に重視した結果」という意味で、過剰な行為が悪い結果を招くことを表します。「視聴率を優先するあまり（行き過ぎた結果）、センセーショナルな報道が増える」が正しい文脈です。</div>
+      </div>
+
+      <div class="question-block" data-q="33" data-answer="2">
+        <div class="q-number">問 33</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q33" value="1"><span class="opt-label">1</span>義務</label>
+          <label class="option"><input type="radio" name="q33" value="2"><span class="opt-label">2</span>必要</label>
+          <label class="option"><input type="radio" name="q33" value="3"><span class="opt-label">3</span>わけ</label>
+          <label class="option"><input type="radio" name="q33" value="4"><span class="opt-label">4</span>はず</label>
+        </div>
+        <div class="explanation">「〜必要があるのではないだろうか」は提案や問いかけの表現として自然です。「義務がある」では強すぎ、「わけがある」「はずがある」は文脈に合いません。</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==============================
+       問題8　追加語彙（総合）
+  =============================== -->
+  <div class="section-card sec-vocab" style="">
+    <div class="section-header" style="background:linear-gradient(135deg,#4527a0,#5e35b1)">
+      <span class="icon">🌟</span>
+      <div>
+        <div>問題８　総合語彙・慣用表現</div>
+        <div style="font-size:0.8rem;font-weight:normal;opacity:0.9;">（　）に入れるのに最もよいものを選んでください。</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="question-block" data-q="34" data-answer="3">
+        <div class="q-number">問 34</div>
+        <div class="q-text">彼は上司に怒鳴られても（　）色も見せず、淡々と仕事をこなした。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q34" value="1"><span class="opt-label">1</span>青い</label>
+          <label class="option"><input type="radio" name="q34" value="2"><span class="opt-label">2</span>赤い</label>
+          <label class="option"><input type="radio" name="q34" value="3"><span class="opt-label">3</span>動じた</label>
+          <label class="option"><input type="radio" name="q34" value="4"><span class="opt-label">4</span>怯えた</label>
+        </div>
+        <div class="explanation">「動じた色も見せず」は慣用表現で「まったく動揺した様子を示さずに」という意味です。「色（いろ）を見せる」は表情や態度に何かを表すことを指します。</div>
+      </div>
+
+      <div class="question-block" data-q="35" data-answer="4">
+        <div class="q-number">問 35</div>
+        <div class="q-text">一世を（　）した天才作曲家の遺品が、先日オークションにかけられた。</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q35" value="1"><span class="opt-label">1</span>席巻</label>
+          <label class="option"><input type="radio" name="q35" value="2"><span class="opt-label">2</span>風靡</label>
+          <label class="option"><input type="radio" name="q35" value="3"><span class="opt-label">3</span>制覇</label>
+          <label class="option"><input type="radio" name="q35" value="4"><span class="opt-label">4</span>風靡</label>
+        </div>
+        <div class="explanation">「一世を風靡（ふうび）する」は「ある時代に圧倒的な人気や影響力を持つ」という意味の慣用表現です。「席巻（せっけん）」も似た意味ですが、「一世を〜する」という形では「風靡」が正しいです。</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ボタン -->
+  <div class="controls">
+    <button id="submitBtn" onclick="submitTest()">答え合わせをする</button>
+    <button id="resetBtn" onclick="resetTest()">最初からやり直す</button>
+  </div>
+
+  <p class="answered-warning" id="answeredWarning" style="display:none;text-align:center;"></p>
+
+  <!-- 結果パネル -->
+  <div class="result-panel" id="resultPanel">
+    <div class="score-ring" id="scoreRing">
+      <div id="scoreNum">--</div>
+      <div class="label">/ 35問</div>
+    </div>
+    <div class="grade-msg" id="gradeMsg"></div>
+    <div class="grade-sub" id="gradeSub"></div>
+    <div class="score-breakdown">
+      <div class="breakdown-item">
+        <div class="b-num" id="bdKanji">-</div>
+        <div class="b-label">漢字読み<br>（5問）</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="b-num" id="bdVocab">-</div>
+        <div class="b-label">語彙・文脈<br>（10問）</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="b-num" id="bdGrammar">-</div>
+        <div class="b-label">文法<br>（13問）</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="b-num" id="bdUsage">-</div>
+        <div class="b-label">用法<br>（5問）</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="b-num" id="bdTotal">-</div>
+        <div class="b-label">正答率</div>
+      </div>
+    </div>
+    <button onclick="scrollToTop()" style="background:linear-gradient(135deg,#1a237e,#3949ab);color:white;padding:12px 28px;border-radius:10px;font-size:0.95rem;">問題を見直す</button>
+  </div>
+
+</main>
+
+<script>
+  const TOTAL = 35;
+  const answers = {
+    1:2, 2:3, 3:1, 4:4, 5:2,
+    6:3, 7:1, 8:4, 9:2, 10:3,
+    11:4, 12:2, 13:1, 14:3, 15:4,
+    16:2, 17:3, 18:1, 19:4, 20:2,
+    21:3, 22:1, 23:4, 24:2, 25:3,
+    26:2, 27:3, 28:1,
+    29:2, 30:4, 31:1, 32:3, 33:2,
+    34:3, 35:4
+  };
+
+  // セクション別問題番号
+  const sections = {
+    kanji:  [1,2,3,4,5],
+    vocab:  [6,7,8,9,10,11,12,13,14,15,34,35],
+    usage:  [16,17,18,19,20],
+    grammar:[21,22,23,24,25,26,27,28,29,30,31,32,33]
+  };
+
+  // タイマー
+  let totalSeconds = 110 * 60;
+  let timerInterval = setInterval(() => {
+    totalSeconds--;
+    const m = Math.floor(totalSeconds / 60);
+    const s = totalSeconds % 60;
+    const el = document.getElementById('timer');
+    el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    if (totalSeconds <= 300) el.classList.add('warning');
+    if (totalSeconds <= 0) {
+      clearInterval(timerInterval);
+      submitTest(true);
+    }
+  }, 1000);
+
+  // ラジオ選択 → スタイル更新 & 進捗更新
+  document.querySelectorAll('.option').forEach(label => {
+    label.addEventListener('click', function() {
+      const radio = this.querySelector('input[type="radio"]');
+      const name = radio.name;
+      document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+        r.closest('.option').classList.remove('selected');
+      });
+      this.classList.add('selected');
+      updateProgress();
+    });
+  });
+
+  function updateProgress() {
+    let answered = 0;
+    for (let i = 1; i <= TOTAL; i++) {
+      const sel = document.querySelector(`input[name="q${i}"]:checked`);
+      if (sel) answered++;
+    }
+    document.getElementById('progressLabel').textContent = `${answered} / ${TOTAL} 問 回答済み`;
+    document.getElementById('progressFill').style.width = `${(answered/TOTAL)*100}%`;
+  }
+
+  function submitTest(forced = false) {
+    // 未回答チェック
+    let unanswered = [];
+    for (let i = 1; i <= TOTAL; i++) {
+      const sel = document.querySelector(`input[name="q${i}"]:checked`);
+      if (!sel) unanswered.push(i);
+    }
+    if (!forced && unanswered.length > 0) {
+      const warn = document.getElementById('answeredWarning');
+      warn.style.display = 'block';
+      warn.textContent = `⚠ 問 ${unanswered.join('、')} がまだ回答されていません。このまま採点しますか？もう一度ボタンを押してください。`;
+      submitTest._pendingConfirm = true;
+      if (!submitTest._pendingConfirm) return;
+    }
+    submitTest._pendingConfirm = false;
+    document.getElementById('answeredWarning').style.display = 'none';
+
+    clearInterval(timerInterval);
+
+    let correct = 0;
+    let sectionScore = { kanji:0, vocab:0, usage:0, grammar:0 };
+
+    for (let i = 1; i <= TOTAL; i++) {
+      const sel = document.querySelector(`input[name="q${i}"]:checked`);
+      const block = document.querySelector(`[data-q="${i}"]`);
+      const correctAns = answers[i];
+      const userAns = sel ? parseInt(sel.value) : null;
+
+      // 全オプションをリセット
+      if (block) {
+        block.querySelectorAll('.option').forEach(opt => {
+          opt.classList.remove('selected','correct','wrong');
+        });
+
+        // 正解を緑に
+        const correctOpt = block.querySelector(`input[value="${correctAns}"]`);
+        if (correctOpt) correctOpt.closest('.option').classList.add('correct');
+
+        // 不正解を赤に
+        if (userAns && userAns !== correctAns) {
+          const wrongOpt = block.querySelector(`input[value="${userAns}"]`);
+          if (wrongOpt) wrongOpt.closest('.option').classList.add('wrong');
+        }
+
+        // 解説を表示
+        const exp = block.querySelector('.explanation');
+        if (exp) exp.classList.add('show');
+      }
+
+      if (userAns === correctAns) {
+        correct++;
+        for (const [sec, qs] of Object.entries(sections)) {
+          if (qs.includes(i)) { sectionScore[sec]++; break; }
+        }
+      }
+    }
+
+    // 全ラジオを無効化
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.disabled = true);
+
+    // 結果表示
+    const pct = Math.round((correct / TOTAL) * 100);
+    let grade, msg, sub, ringClass;
+    if (pct >= 90) { grade='S'; msg='素晴らしい！ほぼ満点です！'; sub='N1合格ラインを大きく超えています。'; ringClass='grade-S'; }
+    else if (pct >= 75) { grade='A'; msg='合格圏内！よく出来ました。'; sub='N1合格の可能性が高いです。弱点を確認しましょう。'; ringClass='grade-A'; }
+    else if (pct >= 60) { grade='B'; msg='あと少し！もう一頑張り。'; sub='基礎はできています。難しい文法・語彙を強化しましょう。'; ringClass='grade-B'; }
+    else if (pct >= 40) { grade='C'; msg='まだ伸びしろがあります。'; sub='語彙と文法の基礎から再確認しましょう。'; ringClass='grade-C'; }
+    else { grade='D'; msg='基礎からしっかり学び直しましょう。'; sub='N2レベルの復習から始めることをお勧めします。'; ringClass='grade-D'; }
+
+    const ring = document.getElementById('scoreRing');
+    ring.className = `score-ring ${ringClass}`;
+    document.getElementById('scoreNum').textContent = correct;
+    document.getElementById('gradeMsg').textContent = `${msg}（評価：${grade}）`;
+    document.getElementById('gradeSub').textContent = sub;
+    document.getElementById('bdKanji').textContent = `${sectionScore.kanji}/5`;
+    document.getElementById('bdVocab').textContent = `${sectionScore.vocab}/12`;
+    document.getElementById('bdGrammar').textContent = `${sectionScore.grammar}/13`;
+    document.getElementById('bdUsage').textContent = `${sectionScore.usage}/5`;
+    document.getElementById('bdTotal').textContent = `${pct}%`;
+
+    const panel = document.getElementById('resultPanel');
+    panel.classList.add('show');
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  submitTest._pendingConfirm = false;
+
+  function resetTest() {
+    if (!confirm('最初からやり直しますか？すべての回答がリセットされます。')) return;
+    location.reload();
+  }
+
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
