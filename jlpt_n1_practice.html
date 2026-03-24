@@ -1,1089 +1,522 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JLPT N1 言語知識 模擬試験</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JLPT N1 言語知識 練習問題</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Hiragino Kaku Gothic Pro","Meiryo","Microsoft JhengHei",sans-serif;background:#f0f4f8;color:#333;line-height:1.7}
+header{background:linear-gradient(135deg,#1a237e,#283593);color:#fff;text-align:center;padding:28px 20px;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+header h1{font-size:1.9rem;letter-spacing:2px}
+header p{margin-top:6px;font-size:.95rem;opacity:.85}
+main{max-width:860px;margin:28px auto;padding:0 14px 60px}
 
-    body {
-      font-family: "Hiragino Kaku Gothic Pro", "Meiryo", "Microsoft JhengHei", sans-serif;
-      background: #f0f4f8;
-      color: #333;
-      line-height: 1.7;
-    }
+.selector-wrap{background:#fff;border-radius:14px;padding:22px 26px;margin-bottom:26px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.selector-wrap label{font-size:.85rem;color:#555;display:block;margin-bottom:8px;font-weight:bold}
+select{width:100%;padding:12px 16px;font-size:1.05rem;border:2px solid #c5cae9;border-radius:10px;background:#fff;color:#333;cursor:pointer;font-family:inherit;outline:none;transition:border-color .2s}
+select:focus{border-color:#3949ab}
 
-    header {
-      background: linear-gradient(135deg, #1a237e, #283593);
-      color: white;
-      text-align: center;
-      padding: 32px 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
+.section-info{background:#e8eaf6;border-radius:10px;padding:12px 18px;margin-bottom:20px;font-size:.9rem;color:#3949ab;display:flex;align-items:center;gap:8px}
 
-    header h1 { font-size: 2rem; letter-spacing: 2px; }
-    header p { margin-top: 8px; font-size: 1rem; opacity: 0.85; }
+.q-block{background:#fff;border-radius:14px;padding:22px 24px;margin-bottom:18px;box-shadow:0 2px 8px rgba(0,0,0,.07);transition:box-shadow .2s}
+.q-block:hover{box-shadow:0 4px 14px rgba(0,0,0,.1)}
 
-    .badge {
-      display: inline-block;
-      background: #ffd600;
-      color: #333;
-      font-weight: bold;
-      padding: 4px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      margin-top: 10px;
-    }
+.q-num{display:inline-block;background:#e8eaf6;color:#1a237e;font-weight:bold;padding:2px 10px;border-radius:6px;font-size:.83rem;margin-bottom:10px}
+.q-text{font-size:1.03rem;margin-bottom:14px;line-height:1.85}
+.underline{text-decoration:underline;text-underline-offset:3px}
+.blank{color:#1a237e;font-weight:bold}
+.passage-box{background:#fafafa;border-left:4px solid #90caf9;padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:14px;font-size:.97rem;line-height:2}
 
-    main { max-width: 900px; margin: 30px auto; padding: 0 16px 60px; }
+.options{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+@media(max-width:580px){.options{grid-template-columns:1fr}}
+.opt{display:flex;align-items:center;gap:9px;padding:9px 13px;border:2px solid #e0e0e0;border-radius:9px;cursor:pointer;transition:all .15s;font-size:.95rem;user-select:none}
+.opt:hover{border-color:#5c6bc0;background:#f3f4ff}
+.opt input{display:none}
+.opt.sel{border-color:#1a237e;background:#e8eaf6}
+.opt.ok{border-color:#2e7d32;background:#e8f5e9;color:#2e7d32;font-weight:bold}
+.opt.ng{border-color:#c62828;background:#ffebee;color:#c62828}
+.opt-lbl{width:24px;height:24px;background:#e0e0e0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:.8rem;flex-shrink:0;transition:background .15s}
+.opt.sel .opt-lbl{background:#1a237e;color:#fff}
+.opt.ok  .opt-lbl{background:#2e7d32;color:#fff}
+.opt.ng  .opt-lbl{background:#c62828;color:#fff}
 
-    .timer-bar {
-      background: white;
-      border-radius: 12px;
-      padding: 14px 22px;
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
+.check-btn{display:none;margin-top:13px;padding:9px 22px;background:linear-gradient(135deg,#1a237e,#3949ab);color:#fff;border:none;border-radius:8px;font-size:.93rem;font-weight:bold;cursor:pointer;font-family:inherit;transition:all .2s}
+.check-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(26,35,126,.3)}
+.check-btn:disabled{opacity:.5;cursor:default;transform:none}
 
-    #timer { font-size: 1.4rem; font-weight: bold; color: #1a237e; }
-    #timer.warning { color: #e53935; animation: blink 1s infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.result-box{display:none;margin-top:13px;padding:13px 16px;border-radius:9px;font-size:.9rem;line-height:1.75}
+.result-box.correct-res{background:#e8f5e9;border-left:4px solid #2e7d32}
+.result-box.wrong-res{background:#fff3e0;border-left:4px solid #f57c00}
+.result-icon{font-size:1.1rem;font-weight:bold;margin-bottom:4px}
+.exp-text{color:#555;margin-top:6px}
 
-    .progress-wrap { flex: 1; margin: 0 20px; }
-    .progress-label { font-size: 0.8rem; color: #666; margin-bottom: 4px; }
-    .progress-bar { background: #e0e0e0; border-radius: 10px; height: 10px; overflow: hidden; }
-    .progress-fill { background: linear-gradient(90deg, #1a237e, #42a5f5); height: 100%; border-radius: 10px; transition: width 0.3s; }
+.score-bar{background:#fff;border-radius:12px;padding:14px 22px;margin-bottom:22px;display:flex;align-items:center;gap:18px;box-shadow:0 2px 8px rgba(0,0,0,.07);flex-wrap:wrap}
+.score-stat{text-align:center;min-width:60px}
+.score-stat .num{font-size:1.4rem;font-weight:bold;color:#1a237e}
+.score-stat .lbl{font-size:.75rem;color:#777}
+.prog-wrap{flex:1;min-width:120px}
+.prog-bg{background:#e0e0e0;border-radius:8px;height:9px;overflow:hidden}
+.prog-fill{background:linear-gradient(90deg,#1a237e,#42a5f5);height:100%;border-radius:8px;transition:width .3s}
+.prog-lbl{font-size:.8rem;color:#666;margin-bottom:4px}
 
-    .section-card {
-      background: white;
-      border-radius: 16px;
-      margin-bottom: 32px;
-      overflow: hidden;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-    }
-
-    .section-header {
-      padding: 18px 28px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: white;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .section-header .icon { font-size: 1.3rem; }
-
-    .sec-vocab .section-header { background: linear-gradient(135deg, #00796b, #009688); }
-    .sec-kanji .section-header { background: linear-gradient(135deg, #6a1b9a, #7b1fa2); }
-    .sec-grammar .section-header { background: linear-gradient(135deg, #e65100, #f57c00); }
-    .sec-usage .section-header { background: linear-gradient(135deg, #1565c0, #1976d2); }
-    .sec-rearrange .section-header { background: linear-gradient(135deg, #2e7d32, #388e3c); }
-    .sec-text .section-header { background: linear-gradient(135deg, #c62828, #d32f2f); }
-
-    .section-body { padding: 24px 28px; }
-
-    .question-block {
-      margin-bottom: 28px;
-      border-bottom: 1px solid #f0f0f0;
-      padding-bottom: 24px;
-    }
-    .question-block:last-child { border-bottom: none; margin-bottom: 0; }
-
-    .q-number {
-      display: inline-block;
-      background: #e8eaf6;
-      color: #1a237e;
-      font-weight: bold;
-      padding: 2px 10px;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      margin-bottom: 10px;
-    }
-
-    .q-text {
-      font-size: 1.05rem;
-      margin-bottom: 14px;
-      line-height: 1.8;
-    }
-
-    .q-text ruby rt { font-size: 0.65em; color: #555; }
-
-    .underline { text-decoration: underline; text-underline-offset: 3px; }
-
-    .passage-box {
-      background: #fafafa;
-      border-left: 4px solid #90caf9;
-      padding: 16px 20px;
-      border-radius: 0 8px 8px 0;
-      margin-bottom: 16px;
-      font-size: 1rem;
-      line-height: 2;
-    }
-
-    .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    @media (max-width: 600px) { .options { grid-template-columns: 1fr; } }
-
-    .option {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-size: 0.97rem;
-    }
-
-    .option:hover { border-color: #5c6bc0; background: #f3f4ff; }
-    .option input[type="radio"] { display: none; }
-
-    .option.selected { border-color: #1a237e; background: #e8eaf6; }
-    .option.correct  { border-color: #2e7d32; background: #e8f5e9; color: #2e7d32; font-weight: bold; }
-    .option.wrong    { border-color: #c62828; background: #ffebee; color: #c62828; }
-
-    .opt-label {
-      width: 26px; height: 26px;
-      background: #e0e0e0;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: bold; font-size: 0.85rem;
-      flex-shrink: 0;
-      transition: background 0.2s;
-    }
-    .option.selected .opt-label { background: #1a237e; color: white; }
-    .option.correct  .opt-label { background: #2e7d32; color: white; }
-    .option.wrong    .opt-label { background: #c62828; color: white; }
-
-    .explanation {
-      display: none;
-      margin-top: 12px;
-      padding: 12px 16px;
-      background: #fff8e1;
-      border-radius: 8px;
-      border-left: 4px solid #ffc107;
-      font-size: 0.9rem;
-      line-height: 1.7;
-    }
-    .explanation.show { display: block; }
-
-    .rearrange-block { margin-bottom: 28px; border-bottom: 1px solid #f0f0f0; padding-bottom: 24px; }
-    .rearrange-block:last-child { border-bottom: none; }
-
-    .r-sentence {
-      font-size: 1.05rem;
-      margin-bottom: 14px;
-      line-height: 1.9;
-      background: #f5f5f5;
-      padding: 12px 16px;
-      border-radius: 8px;
-    }
-
-    .r-blank {
-      display: inline-block;
-      width: 48px;
-      border-bottom: 2px solid #1a237e;
-      text-align: center;
-      font-weight: bold;
-      color: #1a237e;
-      vertical-align: middle;
-      margin: 0 3px;
-    }
-
-    .r-star { color: #e53935; font-weight: bold; }
-
-    .controls {
-      text-align: center;
-      margin: 36px 0 16px;
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    button {
-      padding: 13px 36px;
-      border: none;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: inherit;
-    }
-
-    #submitBtn {
-      background: linear-gradient(135deg, #1a237e, #3949ab);
-      color: white;
-      box-shadow: 0 4px 14px rgba(26,35,126,0.3);
-    }
-    #submitBtn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26,35,126,0.4); }
-
-    #resetBtn {
-      background: #f5f5f5;
-      color: #555;
-      border: 2px solid #ddd;
-    }
-    #resetBtn:hover { background: #eee; }
-
-    .result-panel {
-      display: none;
-      background: white;
-      border-radius: 16px;
-      padding: 36px;
-      text-align: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      margin-top: 10px;
-    }
-    .result-panel.show { display: block; }
-
-    .score-ring {
-      width: 140px; height: 140px;
-      border-radius: 50%;
-      margin: 0 auto 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.2rem;
-      font-weight: bold;
-      color: white;
-    }
-
-    .score-ring .label { font-size: 0.85rem; font-weight: normal; margin-top: 2px; }
-
-    .grade-S { background: linear-gradient(135deg, #ff6f00, #ffa000); }
-    .grade-A { background: linear-gradient(135deg, #1565c0, #1e88e5); }
-    .grade-B { background: linear-gradient(135deg, #2e7d32, #43a047); }
-    .grade-C { background: linear-gradient(135deg, #6a1b9a, #8e24aa); }
-    .grade-D { background: linear-gradient(135deg, #c62828, #e53935); }
-
-    .grade-msg { font-size: 1.3rem; font-weight: bold; margin-bottom: 10px; }
-    .grade-sub { color: #666; font-size: 0.95rem; margin-bottom: 24px; }
-
-    .score-breakdown {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-      flex-wrap: wrap;
-      margin-bottom: 24px;
-    }
-
-    .breakdown-item {
-      text-align: center;
-      padding: 12px 20px;
-      background: #f5f5f5;
-      border-radius: 10px;
-      min-width: 100px;
-    }
-
-    .breakdown-item .b-num { font-size: 1.5rem; font-weight: bold; color: #1a237e; }
-    .breakdown-item .b-label { font-size: 0.8rem; color: #666; margin-top: 2px; }
-
-    .answered-warning {
-      color: #e53935;
-      font-size: 0.88rem;
-      margin-top: 8px;
-    }
-  </style>
+.empty-state{text-align:center;padding:60px 20px;color:#999;font-size:1rem}
+</style>
 </head>
 <body>
 
 <header>
-  <h1>🎌 JLPT N1 言語知識</h1>
-  <p>文字・語彙 ／ 文法 　模擬試験（近年出題傾向対応版）</p>
-  <span class="badge">問題数：35問　目安時間：110分</span>
+  <h1>🎌 JLPT N1 言語知識 練習問題</h1>
+  <p>文字・語彙 ／ 文法　― 選択後すぐに答え合わせができます</p>
 </header>
 
 <main>
 
-  <!-- タイマー・進捗 -->
-  <div class="timer-bar">
-    <div>
-      <div style="font-size:0.8rem;color:#666;margin-bottom:2px;">残り時間</div>
-      <div id="timer">110:00</div>
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-label" id="progressLabel">0 / 35 問 回答済み</div>
-      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="selector-wrap">
+    <label>📚 問題の種類を選択してください</label>
+    <select id="sectionSelect" onchange="loadSection()">
+      <option value="">― 選択してください ―</option>
+      <option value="kanji">問題１　漢字の読み方（50問）</option>
+      <option value="vocab">問題２　文脈規定・語彙（50問）</option>
+      <option value="synonym">問題３　言い換え類義（50問）</option>
+      <option value="usage">問題４　用法（50問）</option>
+      <option value="grammar">問題５　文の文法（50問）</option>
+    </select>
+  </div>
+
+  <div class="score-bar" id="scoreBar" style="display:none">
+    <div class="score-stat"><div class="num" id="scCorrect">0</div><div class="lbl">正解</div></div>
+    <div class="score-stat"><div class="num" id="scWrong">0</div><div class="lbl">不正解</div></div>
+    <div class="score-stat"><div class="num" id="scPct">—</div><div class="lbl">正答率</div></div>
+    <div class="prog-wrap">
+      <div class="prog-lbl" id="progLbl">0 問 回答済み</div>
+      <div class="prog-bg"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
     </div>
   </div>
 
-  <!-- ==============================
-       問題1　漢字の読み
-  =============================== -->
-  <div class="section-card sec-kanji">
-    <div class="section-header">
-      <span class="icon">📖</span>
-      <div>
-        <div>問題１　漢字の読み方</div>
-        <div style="font-size:0.8rem;font-weight:normal;opacity:0.9;">__の言葉の読み方として最もよいものを、1・2・3・4から一つ選んでください。</div>
-      </div>
-    </div>
-    <div class="section-body">
-
-      <div class="question-block" data-q="1" data-answer="2">
-        <div class="q-number">問 1</div>
-        <div class="q-text">彼女の<span class="underline">憂鬱</span>な表情から、何か深刻な問題を抱えていることがうかがえた。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q1" value="1"><span class="opt-label">1</span>きつい</label>
-          <label class="option"><input type="radio" name="q1" value="2"><span class="opt-label">2</span>ゆううつ</label>
-          <label class="option"><input type="radio" name="q1" value="3"><span class="opt-label">3</span>むなしい</label>
-          <label class="option"><input type="radio" name="q1" value="4"><span class="opt-label">4</span>おとなしい</label>
-        </div>
-        <div class="explanation">「憂鬱（ゆううつ）」は気分が晴れない・暗い状態を意味します。「鬱（うつ）」は画数が多く難読漢字の代表例です。</div>
-      </div>
-
-      <div class="question-block" data-q="2" data-answer="3">
-        <div class="q-number">問 2</div>
-        <div class="q-text">社長は部下の<span class="underline">功績</span>を称え、盛大な表彰式を開いた。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q2" value="1"><span class="opt-label">1</span>こうせき</label>
-          <label class="option"><input type="radio" name="q2" value="2"><span class="opt-label">2</span>こうさく</label>
-          <label class="option"><input type="radio" name="q2" value="3"><span class="opt-label">3</span>こうせき</label>
-          <label class="option"><input type="radio" name="q2" value="4"><span class="opt-label">4</span>こうとく</label>
-        </div>
-        <div class="explanation">「功績（こうせき）」は優れた業績・手柄のことです。1と3は同じ読みですが、正解は「こうせき（功績）」です。</div>
-      </div>
-
-      <div class="question-block" data-q="3" data-answer="1">
-        <div class="q-number">問 3</div>
-        <div class="q-text">長年の<span class="underline">確執</span>が続いていた両国は、ついに和解の道を選んだ。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q3" value="1"><span class="opt-label">1</span>かくしつ</label>
-          <label class="option"><input type="radio" name="q3" value="2"><span class="opt-label">2</span>かくせつ</label>
-          <label class="option"><input type="radio" name="q3" value="3"><span class="opt-label">3</span>こうしつ</label>
-          <label class="option"><input type="radio" name="q3" value="4"><span class="opt-label">4</span>こくしつ</label>
-        </div>
-        <div class="explanation">「確執（かくしつ）」は意見や立場の対立が続き、互いに譲らない状態のことです。</div>
-      </div>
-
-      <div class="question-block" data-q="4" data-answer="4">
-        <div class="q-number">問 4</div>
-        <div class="q-text">新薬の開発においては、<span class="underline">綿密</span>な臨床試験が不可欠だ。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q4" value="1"><span class="opt-label">1</span>めんみつ</label>
-          <label class="option"><input type="radio" name="q4" value="2"><span class="opt-label">2</span>けんみつ</label>
-          <label class="option"><input type="radio" name="q4" value="3"><span class="opt-label">3</span>きんみつ</label>
-          <label class="option"><input type="radio" name="q4" value="4"><span class="opt-label">4</span>めんみつ</label>
-        </div>
-        <div class="explanation">「綿密（めんみつ）」は細かい点まで注意が行き届いている様子。1と4は同じですが、綿密の正しい読みは「めんみつ」です。</div>
-      </div>
-
-      <div class="question-block" data-q="5" data-answer="2">
-        <div class="q-number">問 5</div>
-        <div class="q-text">その映画監督は<span class="underline">斬新</span>な映像表現で世界中の観客を魅了した。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q5" value="1"><span class="opt-label">1</span>しんしん</label>
-          <label class="option"><input type="radio" name="q5" value="2"><span class="opt-label">2</span>ざんしん</label>
-          <label class="option"><input type="radio" name="q5" value="3"><span class="opt-label">3</span>さんしん</label>
-          <label class="option"><input type="radio" name="q5" value="4"><span class="opt-label">4</span>せんしん</label>
-        </div>
-        <div class="explanation">「斬新（ざんしん）」はこれまでにない新しい発想や形式のことです。「斬」は「ざん」と読みます（例：斬る→きる）。</div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ==============================
-       問題2　文脈規定（語彙）
-  =============================== -->
-  <div class="section-card sec-vocab">
-    <div class="section-header">
-      <span class="icon">📝</span>
-      <div>
-        <div>問題２　文脈規定</div>
-        <div style="font-size:0.8rem;font-weight:normal;opacity:0.9;">（　）に入れるのに最もよいものを、1・2・3・4から一つ選んでください。</div>
-      </div>
-    </div>
-    <div class="section-body">
-
-      <div class="question-block" data-q="6" data-answer="3">
-        <div class="q-number">問 6</div>
-        <div class="q-text">彼は謝罪の言葉を述べたが、その態度には真摯さが（　）、かえって相手の怒りを買った。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q6" value="1"><span class="opt-label">1</span>あふれ</label>
-          <label class="option"><input type="radio" name="q6" value="2"><span class="opt-label">2</span>もれ</label>
-          <label class="option"><input type="radio" name="q6" value="3"><span class="opt-label">3</span>欠け</label>
-          <label class="option"><input type="radio" name="q6" value="4"><span class="opt-label">4</span>溢れ</label>
-        </div>
-        <div class="explanation">「真摯さが欠け（かけ）」で「真剣さや誠実さが足りない」という意味になります。「かえって」という逆接表現がヒントです。</div>
-      </div>
-
-      <div class="question-block" data-q="7" data-answer="1">
-        <div class="q-number">問 7</div>
-        <div class="q-text">長時間の会議の末、ようやく両者は（　）のとれた解決策にたどり着いた。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q7" value="1"><span class="opt-label">1</span>折り合い</label>
-          <label class="option"><input type="radio" name="q7" value="2"><span class="opt-label">2</span>釣り合い</label>
-          <label class="option"><input type="radio" name="q7" value="3"><span class="opt-label">3</span>見合い</label>
-          <label class="option"><input type="radio" name="q7" value="4"><span class="opt-label">4</span>向き合い</label>
-        </div>
-        <div class="explanation">「折り合いのとれた」は双方が譲り合い、妥協点を見つけた状態を意味します。「折り合いをつける」という慣用表現も重要です。</div>
-      </div>
-
-      <div class="question-block" data-q="8" data-answer="4">
-        <div class="q-number">問 8</div>
-        <div class="q-text">彼女は反論することなく、ただ（　）として上司の叱責を受け入れた。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q8" value="1"><span class="opt-label">1</span>悠々</label>
-          <label class="option"><input type="radio" name="q8" value="2"><span class="opt-label">2</span>颯爽</label>
-          <label class="option"><input type="radio" name="q8" value="3"><span class="opt-label">3</span>淡々</label>
-          <label class="option"><input type="radio" name="q8" value="4"><span class="opt-label">4</span>神妙</label>
-        </div>
-        <div class="explanation">「神妙（しんみょう）として」は、おとなしく素直に従う様子を表す表現です。叱られる場面に合います。「淡々」は感情なく冷静な様子で意味が異なります。</div>
-      </div>
-
-      <div class="question-block" data-q="9" data-answer="2">
-        <div class="q-number">問 9</div>
-        <div class="q-text">その老舗旅館は数百年の歴史を持ち、時代に（　）ながら伝統を守り続けている。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q9" value="1"><span class="opt-label">1</span>従い</label>
-          <label class="option"><input type="radio" name="q9" value="2"><span class="opt-label">2</span>抗い</label>
-          <label class="option"><input type="radio" name="q9" value="3"><span class="opt-label">3</span>乗じ</label>
-          <label class="option"><input type="radio" name="q9" value="4"><span class="opt-label">4</span>基づき</label>
-        </div>
-        <div class="explanation">「時代に抗い（あらがい）ながら」は時代の流れに逆らいつつも、という意味です。「ながら」の逆接的ニュアンスと「伝統を守る」という文脈から判断します。</div>
-      </div>
-
-      <div class="question-block" data-q="10" data-answer="3">
-        <div class="q-number">問 10</div>
-        <div class="q-text">あの政治家の発言は常に（　）が多く、本当の意図がつかみにくい。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q10" value="1"><span class="opt-label">1</span>矛盾</label>
-          <label class="option"><input type="radio" name="q10" value="2"><span class="opt-label">2</span>誇張</label>
-          <label class="option"><input type="radio" name="q10" value="3"><span class="opt-label">3</span>含み</label>
-          <label class="option"><input type="radio" name="q10" value="4"><span class="opt-label">4</span>虚偽</label>
-        </div>
-        <div class="explanation">「含み（ふくみ）が多い」は言葉の裏にいろいろな意味や意図が隠されている様子です。「意図がつかみにくい」という文脈に合います。</div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ==============================
-       問題3　言い換え類義
-  =============================== -->
-  <div class="section-card sec-vocab" style="--accent:#00796b">
-    <div class="section-header" style="background:linear-gradient(135deg,#00695c,#00796b)">
-      <span class="icon">🔄</span>
-      <div>
-        <div>問題３　言い換え類義</div>
-        <div style="font-size:0.8rem;font-weight:normal;opacity:0.9;">__の言葉に意味が最も近いものを、1・2・3・4から一つ選んでください。</div>
-      </div>
-    </div>
-    <div class="section-body">
-
-      <div class="question-block" data-q="11" data-answer="4">
-        <div class="q-number">問 11</div>
-        <div class="q-text">彼の行動はまったく<span class="underline">不可解</span>だった。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q11" value="1"><span class="opt-label">1</span>不誠実</label>
-          <label class="option"><input type="radio" name="q11" value="2"><span class="opt-label">2</span>不合理</label>
-          <label class="option"><input type="radio" name="q11" value="3"><span class="opt-label">3</span>無謀</label>
-          <label class="option"><input type="radio" name="q11" value="4"><span class="opt-label">4</span>理解しがたい</label>
-        </div>
-        <div class="explanation">「不可解（ふかかい）」は理解できない・わけがわからないという意味です。「理解しがたい」が最も近い表現です。</div>
-      </div>
-
-      <div class="question-block" data-q="12" data-answer="2">
-        <div class="q-number">問 12</div>
-        <div class="q-text">彼女はそのニュースを聞いて<span class="underline">呆然</span>とした。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q12" value="1"><span class="opt-label">1</span>ひどく怒った</label>
-          <label class="option"><input type="radio" name="q12" value="2"><span class="opt-label">2</span>驚きや悲しみで茫然とした</label>
-          <label class="option"><input type="radio" name="q12" value="3"><span class="opt-label">3</span>深く考え込んだ</label>
-          <label class="option"><input type="radio" name="q12" value="4"><span class="opt-label">4</span>大声で泣き叫んだ</label>
-        </div>
-        <div class="explanation">「呆然（ぼうぜん）とした」は、驚きや悲しみ、失望などで心が空白になり、放心した状態を指します。</div>
-      </div>
-
-      <div class="question-block" data-q="13" data-answer="1">
-        <div class="q-number">問 13</div>
-        <div class="q-text">その計画には<span class="underline">看過できない</span>問題点がある。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q13" value="1"><span class="opt-label">1</span>見逃せない</label>
-          <label class="option"><input type="radio" name="q13" value="2"><span class="opt-label">2</span>解決できない</label>
-          <label class="option"><input type="radio" name="q13" value="3"><span class="opt-label">3</span>避けられない</label>
-          <label class="option"><input type="radio" name="q13" value="4"><span class="opt-label">4</span>理解できない</label>
-        </div>
-        <div class="explanation">「看過（かんか）できない」は見過ごすことができない、放っておけないという意味です。「看」は見るという漢字です。</div>
-      </div>
-
-      <div class="question-block" data-q="14" data-answer="3">
-        <div class="q-number">問 14</div>
-        <div class="q-text">その地域の経済は<span class="underline">停滞</span>していた。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q14" value="1"><span class="opt-label">1</span>急速に悪化</label>
-          <label class="option"><input type="radio" name="q14" value="2"><span class="opt-label">2</span>着実に成長</label>
-          <label class="option"><input type="radio" name="q14" value="3"><span class="opt-label">3</span>動きが鈍く進展がない</label>
-          <label class="option"><input type="radio" name="q14" value="4"><span class="opt-label">4</span>激しく変動</label>
-        </div>
-        <div class="explanation">「停滞（ていたい）」は物事が順調に進まず、同じ状態にとどまっていることです。「動きが鈍く進展がない」が最も近い表現です。</div>
-      </div>
-
-      <div class="question-block" data-q="15" data-answer="4">
-        <div class="q-number">問 15</div>
-        <div class="q-text">彼の考え方は非常に<span class="underline">硬直</span>していた。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q15" value="1"><span class="opt-label">1</span>独創的</label>
-          <label class="option"><input type="radio" name="q15" value="2"><span class="opt-label">2</span>感情的</label>
-          <label class="option"><input type="radio" name="q15" value="3"><span class="opt-label">3</span>論理的</label>
-          <label class="option"><input type="radio" name="q15" value="4"><span class="opt-label">4</span>柔軟性がない</label>
-        </div>
-        <div class="explanation">「硬直（こうちょく）した考え方」は柔軟性がなく、変化を受け入れない固まった思考を意味します。</div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ==============================
-       問題4　用法
-  =============================== -->
-  <div class="section-card sec-usage">
-    <div class="section-header">
-      <span class="icon">✏️</span>
-      <div>
-        <div>問題４　用法</div>
-        <div style="font-size:0.8rem;font-weight:normal;opacity:0.9;">次の言葉の使い方として最もよいものを、1・2・3・4から一つ選んでください。</div>
-      </div>
-    </div>
-    <div class="section-body">
-
-      <div class="question-block" data-q="16" data-answer="2">
-        <div class="q-number">問 16　「凌ぐ（しのぐ）」</div>
-        <div class="q-text"> </div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q16" value="1"><span class="opt-label">1</span>彼は先輩を凌いで、先にゴールに到達できなかった。</label>
-          <label class="option"><input type="radio" name="q16" value="2"><span class="opt-label">2</span>今年の売上は昨年を凌ぐ勢いで伸びている。</label>
-          <label class="option"><input type="radio" name="q16" value="3"><span class="opt-label">3</span>彼女の失敗を凌いで、なんとかプロジェクトを完成させた。</label>
-          <label class="option"><input type="radio" name="q16" value="4"><span class="opt-label">4</span>困難を凌いだ結果、彼は職を失った。</label>
-        </div>
-        <div class="explanation">「凌ぐ」には①他を超える・上回る（例：昨年を凌ぐ）②困難な状況をどうにか乗り切る（例：苦境を凌ぐ）という意味があります。2が正しい用法です。</div>
-      </div>
-
-      <div class="question-block" data-q="17" data-answer="3">
-        <div class="q-number">問 17　「おぼつかない」</div>
-        <div class="q-text"> </div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q17" value="1"><span class="opt-label">1</span>彼の話は非常におぼつかなく、誰もが感動した。</label>
-          <label class="option"><input type="radio" name="q17" value="2"><span class="opt-label">2</span>その政策はおぼつかない支持を受けており、成功が期待される。</label>
-          <label class="option"><input type="radio" name="q17" value="3"><span class="opt-label">3</span>足腰が弱った祖父の歩みはおぼつかなかった。</label>
-          <label class="option"><input type="radio" name="q17" value="4"><span class="opt-label">4</span>彼女の英語はおぼつかなく、海外でも通じた。</label>
-        </div>
-        <div class="explanation">「おぼつかない」は①はっきりしない・確かでない②不安定でたよりない、という意味です。足腰が弱った老人の歩みに使うのが正しい用法です。</div>
-      </div>
-
-      <div class="question-block" data-q="18" data-answer="1">
-        <div class="q-number">問 18　「逡巡（しゅんじゅん）する」</div>
-        <div class="q-text"> </div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q18" value="1"><span class="opt-label">1</span>決断を求められた彼は、しばらく逡巡した後、断ることにした。</label>
-          <label class="option"><input type="radio" name="q18" value="2"><span class="opt-label">2</span>彼女は試験に合格し、逡巡して喜んだ。</label>
-          <label class="option"><input type="radio" name="q18" value="3"><span class="opt-label">3</span>その企画は逡巡した結果、大成功を収めた。</label>
-          <label class="option"><input type="radio" name="q18" value="4"><span class="opt-label">4</span>子供たちは公園で逡巡しながら遊んでいた。</label>
-        </div>
-        <div class="explanation">「逡巡（しゅんじゅん）する」はためらう・躊躇するという意味です。決断できずに迷っている場面で使います。</div>
-      </div>
-
-      <div class="question-block" data-q="19" data-answer="4">
-        <div class="q-number">問 19　「杞憂（きゆう）」</div>
-        <div class="q-text"> </div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q19" value="1"><span class="opt-label">1</span>試験の結果が悪かったのは杞憂だった。</label>
-          <label class="option"><input type="radio" name="q19" value="2"><span class="opt-label">2</span>彼の杞憂は正しく、事故は本当に起きた。</label>
-          <label class="option"><input type="radio" name="q19" value="3"><span class="opt-label">3</span>杞憂をもとに、しっかりした対策をとるべきだ。</label>
-          <label class="option"><input type="radio" name="q19" value="4"><span class="opt-label">4</span>失敗するかもしれないという不安は杞憂に終わり、発表は大成功だった。</label>
-        </div>
-        <div class="explanation">「杞憂（きゆう）」は取り越し苦労・心配する必要のない無駄な心配という意味です。「杞憂に終わる」（心配が無駄だったと判明する）という使い方が正しいです。</div>
-      </div>
-
-      <div class="question-block" data-q="20" data-answer="2">
-        <div class="q-number">問 20　「拭いきれない」</div>
-        <div class="q-text"> </div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q20" value="1"><span class="opt-label">1</span>彼の優秀さは拭いきれないほど明らかだ。</label>
-          <label class="option"><input type="radio" name="q20" value="2"><span class="opt-label">2</span>その事件への関与について、拭いきれない疑惑が残っている。</label>
-          <label class="option"><input type="radio" name="q20" value="3"><span class="opt-label">3</span>彼女の美しさは拭いきれない印象を与えた。</label>
-          <label class="option"><input type="radio" name="q20" value="4"><span class="opt-label">4</span>その店の料理は拭いきれないほどおいしかった。</label>
-        </div>
-        <div class="explanation">「拭いきれない」は否定的・懸念される感情や疑念が消えない場合に使います。疑惑・不安・後悔などと組み合わせるのが自然な用法です。</div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ==============================
-       問題5　文法（文の文法1）
-  =============================== -->
-  <div class="section-card sec-grammar">
-    <div class="section-header">
-      <span class="icon">📐</span>
-      <div>
-        <div>問題５　文の文法１</div>
-        <div style="font-size:0.8rem;font-weight:normal;opacity:0.9;">（　）に入れるのに最もよいものを、1・2・3・4から一つ選んでください。</div>
-      </div>
-    </div>
-    <div class="section-body">
-
-      <div class="question-block" data-q="21" data-answer="3">
-        <div class="q-number">問 21</div>
-        <div class="q-text">長年の努力が実を結び、彼女の夢（　）大学に入学することができた。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q21" value="1"><span class="opt-label">1</span>だった</label>
-          <label class="option"><input type="radio" name="q21" value="2"><span class="opt-label">2</span>であった</label>
-          <label class="option"><input type="radio" name="q21" value="3"><span class="opt-label">3</span>であった</label>
-          <label class="option"><input type="radio" name="q21" value="4"><span class="opt-label">4</span>にかなう</label>
-        </div>
-        <div class="explanation">「夢にかなう」より「夢であった〇〇大学に」という同格の形が自然です。「彼女の夢であった大学」＝「彼女が夢見ていた大学」という意味になります。</div>
-      </div>
-
-      <div class="question-block" data-q="22" data-answer="1">
-        <div class="q-number">問 22</div>
-        <div class="q-text">子供のころから親しんだ故郷の景色は、何十年経った今（　）、脳裏に焼き付いている。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q22" value="1"><span class="opt-label">1</span>もなお</label>
-          <label class="option"><input type="radio" name="q22" value="2"><span class="opt-label">2</span>にして</label>
-          <label class="option"><input type="radio" name="q22" value="3"><span class="opt-label">3</span>とはいえ</label>
-          <label class="option"><input type="radio" name="q22" value="4"><span class="opt-label">4</span>ともなると</label>
-        </div>
-        <div class="explanation">「〜た今もなお」は「〜た現在においてもまだ」という意味で、状態が継続していることを強調する表現です。「今もなお脳裏に焼き付いている」が正しい用法です。</div>
-      </div>
-
-      <div class="question-block" data-q="23" data-answer="4">
-        <div class="q-number">問 23</div>
-        <div class="q-text">このプロジェクトが失敗した（　）、責任を取って辞任するつもりだ。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q23" value="1"><span class="opt-label">1</span>としたら</label>
-          <label class="option"><input type="radio" name="q23" value="2"><span class="opt-label">2</span>ようでは</label>
-          <label class="option"><input type="radio" name="q23" value="3"><span class="opt-label">3</span>にしては</label>
-          <label class="option"><input type="radio" name="q23" value="4"><span class="opt-label">4</span>暁には</label>
-        </div>
-        <div class="explanation">「〜暁には（あかつきには）」は「〜した場合には」「〜したその時には」という意味で、特定の事態が実現した際の対応を述べる表現です。</div>
-      </div>
-
-      <div class="question-block" data-q="24" data-answer="2">
-        <div class="q-number">問 24</div>
-        <div class="q-text">彼の発言は事実に（　）ものだったため、周囲の人々は強く反発した。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q24" value="1"><span class="opt-label">1</span>もとづいた</label>
-          <label class="option"><input type="radio" name="q24" value="2"><span class="opt-label">2</span>もとらない</label>
-          <label class="option"><input type="radio" name="q24" value="3"><span class="opt-label">3</span>したがった</label>
-          <label class="option"><input type="radio" name="q24" value="4"><span class="opt-label">4</span>そぐわない</label>
-        </div>
-        <div class="explanation">「事実に反する（もとる）」は事実に反している・背く、という意味です。「もとらない」＝「もとる」の否定ではなく、文脈から「事実にもとる（もとない）もの」が正しいです。ここでは「事実にもとる」（事実に背く）の連体形「もとる」＝選択肢2「もとらない」の否定形として問題が成立。正解は「もとらない」で「事実にもとらない」→「事実に反しない発言」、しかし「反発した」のは矛盾。よってここは「もとった」で事実に反するという意味になります。正答4「そぐわない」は文脈に合わない。正答は「もとらない」ではなく解釈として2が正解。</div>
-      </div>
-
-      <div class="question-block" data-q="25" data-answer="3">
-        <div class="q-number">問 25</div>
-        <div class="q-text">新入社員（　）、敬語の使い方が不完全なのは仕方がないとも言える。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q25" value="1"><span class="opt-label">1</span>にとって</label>
-          <label class="option"><input type="radio" name="q25" value="2"><span class="opt-label">2</span>からすれば</label>
-          <label class="option"><input type="radio" name="q25" value="3"><span class="opt-label">3</span>とあれば</label>
-          <label class="option"><input type="radio" name="q25" value="4"><span class="opt-label">4</span>だけあって</label>
-        </div>
-        <div class="explanation">「〜とあれば」は「〜という立場・状況であれば」という意味で、その条件が理由となることを示す表現です。「新入社員とあれば（新入社員という立場であれば）、仕方ない」という意味になります。</div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ==============================
-       問題6　文の文法2（並び替え）
-  =============================== -->
-  <div class="section-card sec-rearrange">
-    <div class="section-header">
-      <span class="icon">🔀</span>
-      <div>
-        <div>問題６　文の文法２（並べ替え）</div>
-        <div style="font-size:0.8rem;font-weight:normal;opacity:0.9;">★に入るものを選んでください。</div>
-      </div>
-    </div>
-    <div class="section-body">
-
-      <div class="rearrange-block" data-q="26" data-answer="2">
-        <div class="q-number">問 26</div>
-        <div class="r-sentence">
-          その会社の経営方針は、利益追求
-          <span class="r-blank">①</span>
-          <span class="r-blank">②</span>
-          <span class="r-star">★</span>
-          <span class="r-blank">④</span>
-          というものだった。
-        </div>
-        <p style="font-size:0.9rem;color:#555;margin-bottom:12px;">1.重視する　2.のみを　3.従業員の福祉を　4.よりも</p>
-        <div class="options">
-          <label class="option"><input type="radio" name="q26" value="1"><span class="opt-label">1</span>1</label>
-          <label class="option"><input type="radio" name="q26" value="2"><span class="opt-label">2</span>3</label>
-          <label class="option"><input type="radio" name="q26" value="3"><span class="opt-label">3</span>4</label>
-          <label class="option"><input type="radio" name="q26" value="4"><span class="opt-label">4</span>2</label>
-        </div>
-        <div class="explanation">正しい語順：利益追求「のみを」「よりも」「従業員の福祉を」「重視する」。★の位置（③）には「従業員の福祉を」が入ります。</div>
-      </div>
-
-      <div class="rearrange-block" data-q="27" data-answer="3">
-        <div class="q-number">問 27</div>
-        <div class="r-sentence">
-          環境問題に
-          <span class="r-blank">①</span>
-          <span class="r-blank">②</span>
-          <span class="r-star">★</span>
-          <span class="r-blank">④</span>
-          のが私たちの責任だ。
-        </div>
-        <p style="font-size:0.9rem;color:#555;margin-bottom:12px;">1.次の世代に　2.取り組み　3.引き渡す　4.きれいな地球を</p>
-        <div class="options">
-          <label class="option"><input type="radio" name="q27" value="1"><span class="opt-label">1</span>2</label>
-          <label class="option"><input type="radio" name="q27" value="2"><span class="opt-label">2</span>1</label>
-          <label class="option"><input type="radio" name="q27" value="3"><span class="opt-label">3</span>4</label>
-          <label class="option"><input type="radio" name="q27" value="4"><span class="opt-label">4</span>3</label>
-        </div>
-        <div class="explanation">正しい語順：環境問題に「取り組み」「きれいな地球を」「次の世代に」「引き渡す」のが私たちの責任だ。★の位置（③）は「きれいな地球を」が入ります。</div>
-      </div>
-
-      <div class="rearrange-block" data-q="28" data-answer="1">
-        <div class="q-number">問 28</div>
-        <div class="r-sentence">
-          彼女は
-          <span class="r-blank">①</span>
-          <span class="r-blank">②</span>
-          <span class="r-star">★</span>
-          <span class="r-blank">④</span>
-          、仕事を続けた。
-        </div>
-        <p style="font-size:0.9rem;color:#555;margin-bottom:12px;">1.にもかかわらず　2.体調が優れない　3.誰よりも　4.それ</p>
-        <div class="options">
-          <label class="option"><input type="radio" name="q28" value="1"><span class="opt-label">1</span>3</label>
-          <label class="option"><input type="radio" name="q28" value="2"><span class="opt-label">2</span>2</label>
-          <label class="option"><input type="radio" name="q28" value="3"><span class="opt-label">3</span>1</label>
-          <label class="option"><input type="radio" name="q28" value="4"><span class="opt-label">4</span>4</label>
-        </div>
-        <div class="explanation">正しい語順：彼女は「体調が優れない」「それ」「にもかかわらず」「誰よりも」仕事を続けた。★の位置（③）は「誰よりも」が入ります。「〜にもかかわらず」は逆接の表現です。</div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ==============================
-       問題7　文章の文法
-  =============================== -->
-  <div class="section-card sec-text">
-    <div class="section-header">
-      <span class="icon">📄</span>
-      <div>
-        <div>問題７　文章の文法</div>
-        <div style="font-size:0.8rem;font-weight:normal;opacity:0.9;">文章を読んで（　）に入れるのに最もよいものを選んでください。</div>
-      </div>
-    </div>
-    <div class="section-body">
-
-      <div class="passage-box">
-        　現代社会において、情報過多という問題は深刻化している。インターネットの発展により、私たちは膨大な量の情報に（　29　）ようになった。しかし、情報の量が増えれば増えるほど、その質を見極める能力が（　30　）なる。<br><br>
-        　特に若い世代においては、SNSを通じて拡散されるデマや誤情報に惑わされるケースが後を絶たない。情報リテラシーの教育を学校現場で充実させること（　31　）、この問題の根本的な解決策となりうるだろう。<br><br>
-        　また、メディアの報道姿勢にも問題がある。視聴率や閲覧数を優先（　32　）、センセーショナルな見出しで人々の不安をあおるような報道が増えている。私たちは、情報を受け取る際に常に批判的な目を持つ（　33　）があるのではないだろうか。
-      </div>
-
-      <div class="question-block" data-q="29" data-answer="2">
-        <div class="q-number">問 29</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q29" value="1"><span class="opt-label">1</span>さらされる</label>
-          <label class="option"><input type="radio" name="q29" value="2"><span class="opt-label">2</span>さらされる</label>
-          <label class="option"><input type="radio" name="q29" value="3"><span class="opt-label">3</span>触れられる</label>
-          <label class="option"><input type="radio" name="q29" value="4"><span class="opt-label">4</span>囲まれる</label>
-        </div>
-        <div class="explanation">「情報にさらされる」は大量の情報に否応なく接触させられる状態を表します。1・2は同じ選択肢ですが、「さらされる」が正解です。</div>
-      </div>
-
-      <div class="question-block" data-q="30" data-answer="4">
-        <div class="q-number">問 30</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q30" value="1"><span class="opt-label">1</span>高く</label>
-          <label class="option"><input type="radio" name="q30" value="2"><span class="opt-label">2</span>簡単に</label>
-          <label class="option"><input type="radio" name="q30" value="3"><span class="opt-label">3</span>必要に</label>
-          <label class="option"><input type="radio" name="q30" value="4"><span class="opt-label">4</span>より重要に</label>
-        </div>
-        <div class="explanation">「質を見極める能力がより重要になる」が文脈に合います。情報が増えると、選別能力の重要性が増すという論理の流れです。</div>
-      </div>
-
-      <div class="question-block" data-q="31" data-answer="1">
-        <div class="q-number">問 31</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q31" value="1"><span class="opt-label">1</span>こそが</label>
-          <label class="option"><input type="radio" name="q31" value="2"><span class="opt-label">2</span>さえも</label>
-          <label class="option"><input type="radio" name="q31" value="3"><span class="opt-label">3</span>だけが</label>
-          <label class="option"><input type="radio" name="q31" value="4"><span class="opt-label">4</span>までが</label>
-        </div>
-        <div class="explanation">「〜こそが」は強調の助詞で、「情報リテラシーの教育を充実させること『こそが』根本的な解決策だ」と主張を強調する表現として最も適切です。</div>
-      </div>
-
-      <div class="question-block" data-q="32" data-answer="3">
-        <div class="q-number">問 32</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q32" value="1"><span class="opt-label">1</span>すれば</label>
-          <label class="option"><input type="radio" name="q32" value="2"><span class="opt-label">2</span>したり</label>
-          <label class="option"><input type="radio" name="q32" value="3"><span class="opt-label">3</span>するあまり</label>
-          <label class="option"><input type="radio" name="q32" value="4"><span class="opt-label">4</span>するほど</label>
-        </div>
-        <div class="explanation">「〜するあまり」は「〜を過度に重視した結果」という意味で、過剰な行為が悪い結果を招くことを表します。「視聴率を優先するあまり（行き過ぎた結果）、センセーショナルな報道が増える」が正しい文脈です。</div>
-      </div>
-
-      <div class="question-block" data-q="33" data-answer="2">
-        <div class="q-number">問 33</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q33" value="1"><span class="opt-label">1</span>義務</label>
-          <label class="option"><input type="radio" name="q33" value="2"><span class="opt-label">2</span>必要</label>
-          <label class="option"><input type="radio" name="q33" value="3"><span class="opt-label">3</span>わけ</label>
-          <label class="option"><input type="radio" name="q33" value="4"><span class="opt-label">4</span>はず</label>
-        </div>
-        <div class="explanation">「〜必要があるのではないだろうか」は提案や問いかけの表現として自然です。「義務がある」では強すぎ、「わけがある」「はずがある」は文脈に合いません。</div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ==============================
-       問題8　追加語彙（総合）
-  =============================== -->
-  <div class="section-card sec-vocab" style="">
-    <div class="section-header" style="background:linear-gradient(135deg,#4527a0,#5e35b1)">
-      <span class="icon">🌟</span>
-      <div>
-        <div>問題８　総合語彙・慣用表現</div>
-        <div style="font-size:0.8rem;font-weight:normal;opacity:0.9;">（　）に入れるのに最もよいものを選んでください。</div>
-      </div>
-    </div>
-    <div class="section-body">
-
-      <div class="question-block" data-q="34" data-answer="3">
-        <div class="q-number">問 34</div>
-        <div class="q-text">彼は上司に怒鳴られても（　）色も見せず、淡々と仕事をこなした。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q34" value="1"><span class="opt-label">1</span>青い</label>
-          <label class="option"><input type="radio" name="q34" value="2"><span class="opt-label">2</span>赤い</label>
-          <label class="option"><input type="radio" name="q34" value="3"><span class="opt-label">3</span>動じた</label>
-          <label class="option"><input type="radio" name="q34" value="4"><span class="opt-label">4</span>怯えた</label>
-        </div>
-        <div class="explanation">「動じた色も見せず」は慣用表現で「まったく動揺した様子を示さずに」という意味です。「色（いろ）を見せる」は表情や態度に何かを表すことを指します。</div>
-      </div>
-
-      <div class="question-block" data-q="35" data-answer="4">
-        <div class="q-number">問 35</div>
-        <div class="q-text">一世を（　）した天才作曲家の遺品が、先日オークションにかけられた。</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q35" value="1"><span class="opt-label">1</span>席巻</label>
-          <label class="option"><input type="radio" name="q35" value="2"><span class="opt-label">2</span>風靡</label>
-          <label class="option"><input type="radio" name="q35" value="3"><span class="opt-label">3</span>制覇</label>
-          <label class="option"><input type="radio" name="q35" value="4"><span class="opt-label">4</span>風靡</label>
-        </div>
-        <div class="explanation">「一世を風靡（ふうび）する」は「ある時代に圧倒的な人気や影響力を持つ」という意味の慣用表現です。「席巻（せっけん）」も似た意味ですが、「一世を〜する」という形では「風靡」が正しいです。</div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ボタン -->
-  <div class="controls">
-    <button id="submitBtn" onclick="submitTest()">答え合わせをする</button>
-    <button id="resetBtn" onclick="resetTest()">最初からやり直す</button>
-  </div>
-
-  <p class="answered-warning" id="answeredWarning" style="display:none;text-align:center;"></p>
-
-  <!-- 結果パネル -->
-  <div class="result-panel" id="resultPanel">
-    <div class="score-ring" id="scoreRing">
-      <div id="scoreNum">--</div>
-      <div class="label">/ 35問</div>
-    </div>
-    <div class="grade-msg" id="gradeMsg"></div>
-    <div class="grade-sub" id="gradeSub"></div>
-    <div class="score-breakdown">
-      <div class="breakdown-item">
-        <div class="b-num" id="bdKanji">-</div>
-        <div class="b-label">漢字読み<br>（5問）</div>
-      </div>
-      <div class="breakdown-item">
-        <div class="b-num" id="bdVocab">-</div>
-        <div class="b-label">語彙・文脈<br>（10問）</div>
-      </div>
-      <div class="breakdown-item">
-        <div class="b-num" id="bdGrammar">-</div>
-        <div class="b-label">文法<br>（13問）</div>
-      </div>
-      <div class="breakdown-item">
-        <div class="b-num" id="bdUsage">-</div>
-        <div class="b-label">用法<br>（5問）</div>
-      </div>
-      <div class="breakdown-item">
-        <div class="b-num" id="bdTotal">-</div>
-        <div class="b-label">正答率</div>
-      </div>
-    </div>
-    <button onclick="scrollToTop()" style="background:linear-gradient(135deg,#1a237e,#3949ab);color:white;padding:12px 28px;border-radius:10px;font-size:0.95rem;">問題を見直す</button>
-  </div>
+  <div id="questionArea"><div class="empty-state">上のメニューから問題を選んでください</div></div>
 
 </main>
 
 <script>
-  const TOTAL = 35;
-  const answers = {
-    1:2, 2:3, 3:1, 4:4, 5:2,
-    6:3, 7:1, 8:4, 9:2, 10:3,
-    11:4, 12:2, 13:1, 14:3, 15:4,
-    16:2, 17:3, 18:1, 19:4, 20:2,
-    21:3, 22:1, 23:4, 24:2, 25:3,
-    26:2, 27:3, 28:1,
-    29:2, 30:4, 31:1, 32:3, 33:2,
-    34:3, 35:4
-  };
+// ─────────────────────────────────────────────
+// 問題データ
+// ─────────────────────────────────────────────
+const DATA = {
 
-  // セクション別問題番号
-  const sections = {
-    kanji:  [1,2,3,4,5],
-    vocab:  [6,7,8,9,10,11,12,13,14,15,34,35],
-    usage:  [16,17,18,19,20],
-    grammar:[21,22,23,24,25,26,27,28,29,30,31,32,33]
-  };
+// ════════════════════════════════════════════
+// 問題１　漢字の読み方
+// ════════════════════════════════════════════
+kanji: {
+  name:"問題１　漢字の読み方",
+  desc:"＿＿の言葉の読み方として最もよいものを１〜４から選んでください。",
+  questions:[
+    {t:"彼女の<u>憂鬱</u>な表情から、深刻な問題を抱えていることがうかがえた。",o:["きつい","ゆううつ","むなしい","おとなしい"],a:1,e:"「憂鬱（ゆううつ）」は気分が晴れず暗い状態。「鬱」は画数が多い難読字の代表です。"},
+    {t:"社長は部下の<u>功績</u>を称え、盛大な表彰式を開いた。",o:["こうさく","こうとく","こうせき","こうしき"],a:2,e:"「功績（こうせき）」は優れた業績・手柄のことです。"},
+    {t:"長年の<u>確執</u>が続いていた両国は、ついに和解の道を選んだ。",o:["かくしつ","かくせつ","こうしつ","こくしつ"],a:0,e:"「確執（かくしつ）」は意見・立場の対立が続き、互いに譲らない状態です。"},
+    {t:"新薬の開発においては<u>綿密</u>な臨床試験が不可欠だ。",o:["けんみつ","きんみつ","めんみつ","めんさく"],a:2,e:"「綿密（めんみつ）」は細部まで注意が行き届いている様子です。"},
+    {t:"その映画監督は<u>斬新</u>な映像表現で世界中の観客を魅了した。",o:["しんしん","ざんしん","さんしん","せんしん"],a:1,e:"「斬新（ざんしん）」はこれまでにない新しい発想・形式のことです。"},
+    {t:"この問題を<u>看過</u>することはできない。",o:["かんか","みか","かんくわ","みすごし"],a:0,e:"「看過（かんか）」は見逃すこと。「看過できない」＝見過ごせない、という意味です。"},
+    {t:"彼は<u>逡巡</u>した末、断ることにした。",o:["しゅんじゅん","せんじゅん","しゅうじゅん","じゅんじゅん"],a:0,e:"「逡巡（しゅんじゅん）」はためらうこと・躊躇することです。"},
+    {t:"失敗した原因を<u>糊塗</u>しようとしても、すぐにばれてしまった。",o:["のりと","こと","こぬ","とりつ"],a:1,e:"「糊塗（こと）」は失敗や欠点を表面だけ取り繕うことです。"},
+    {t:"その老政治家の発言は<u>示唆</u>に富んでいた。",o:["じさ","しさ","しそ","じそ"],a:1,e:"「示唆（しさ）」はそれとなく示すこと・ほのめかすことです。"},
+    {t:"彼の行動は法の精神に<u>悖る</u>ものだ。",o:["もとる","さからう","みちびく","はいる"],a:0,e:"「悖る（もとる）」は道義・道理に背く・反するという意味の難読語です。"},
+    {t:"この映画は現代社会の<u>矛盾</u>を鋭く描いている。",o:["むじゅん","ぼうじゅん","もじゅん","むとん"],a:0,e:"「矛盾（むじゅん）」は辻褄が合わない・相反すること。語源は中国の故事から。"},
+    {t:"その政治家は汚職を<u>隠蔽</u>しようとした。",o:["いんへい","いんぺい","おんぺい","おんへい"],a:1,e:"「隠蔽（いんぺい）」は事実・証拠などを隠し包み隠すことです。"},
+    {t:"過去の失敗を<u>払拭</u>して再出発した。",o:["はらい","ふっしょく","ふっしき","はらぬぐい"],a:1,e:"「払拭（ふっしょく）」は完全に取り除くこと・一掃することです。"},
+    {t:"彼は<u>傀儡</u>政権の陰に実力者が潜んでいると指摘した。",o:["かいらい","くぐつ","きらい","けらい"],a:0,e:"「傀儡（かいらい）」は他者に操られる存在。人形・操り人形の意味もあります。"},
+    {t:"試験前の<u>杞憂</u>は、結果発表後に笑い話になった。",o:["きゆ","きゆう","きぐ","きうれ"],a:1,e:"「杞憂（きゆう）」は取り越し苦労・無駄な心配のことです。"},
+    {t:"彼女の態度には<u>嫌悪</u>感を覚えた。",o:["きらいも","けんお","げんお","けんぞう"],a:1,e:"「嫌悪（けんお）」はひどく嫌うこと・憎しみを感じることです。"},
+    {t:"経営陣の<u>更迭</u>が発表された。",o:["こうそつ","こうてつ","こうかえ","こうちつ"],a:1,e:"「更迭（こうてつ）」は役職者をその地位から替えること・交代させることです。"},
+    {t:"二人の意見には<u>齟齬</u>があった。",o:["しょご","そご","そぎょ","じょご"],a:1,e:"「齟齬（そご）」は食い違い・不一致のことです。「齟齬をきたす」と使います。"},
+    {t:"彼の計画は途中で<u>頓挫</u>してしまった。",o:["とんざ","とんじゃ","どんざ","とんさ"],a:0,e:"「頓挫（とんざ）」は物事が途中で行き詰まり止まってしまうことです。"},
+    {t:"その国では独裁者が<u>跋扈</u>していた。",o:["ばっこ","ほっこ","はっこ","ばっく"],a:0,e:"「跋扈（ばっこ）」は悪人・権力者などが我が物顔に振る舞うことです。"},
+    {t:"食物をよく<u>咀嚼</u>することは健康に良い。",o:["そしゃく","しゃくそ","じゅしゃく","そくしゃく"],a:0,e:"「咀嚼（そしゃく）」は食べ物をよく噛み砕くこと。転じて内容をよく理解することも指します。"},
+    {t:"彼女は甘いものへの<u>嗜好</u>が強い。",o:["しこう","しこ","すきこう","たのしこう"],a:0,e:"「嗜好（しこう）」は特定のものを好んで楽しむ傾向・好みのことです。"},
+    {t:"選手の<u>失墜</u>したイメージを回復するのは難しい。",o:["しっちゅい","しっつい","しっとい","しつい"],a:1,e:"「失墜（しっつい）」は地位・名声などが落ちること・失われることです。"},
+    {t:"政府は景気回復への<u>懸念</u>を示した。",o:["かんね","けねん","かんねん","けんゆ"],a:1,e:"「懸念（けねん）」は心配・不安・気がかりのことです。"},
+    {t:"社運を賭けたプロジェクトに<u>腐心</u>する日々が続いた。",o:["ふしん","ふぐさ","ふうしん","くさんしん"],a:0,e:"「腐心（ふしん）」は心を悩ませながら努力することです。「腐」は腐るではなく、悩み苦しむ意。"},
+    {t:"情報が<u>錯綜</u>して、真相がわからなくなった。",o:["さくとう","さくそう","さっそう","しゃくそう"],a:1,e:"「錯綜（さくそう）」は複雑に絡み合い混乱していることです。"},
+    {t:"彼の発言は<u>婉曲</u>な表現を多く含んでいた。",o:["えんきょく","えんく","わんきょく","おうきょく"],a:0,e:"「婉曲（えんきょく）」は遠回しな・角が立たないような言い方のことです。"},
+    {t:"リーダーとして部下の気持ちを<u>慮る</u>ことが大切だ。",o:["おもう","かんがえる","おもんぱかる","はかる"],a:2,e:"「慮る（おもんぱかる）」は十分に考慮すること・思いやりを持って深く考えることです。"},
+    {t:"彼の判断は<u>恣意的</u>だと批判された。",o:["しいてき","しょいてき","じいてき","えいてき"],a:0,e:"「恣意的（しいてき）」は自分の気ままな意志によるもの・論理的根拠がないことです。"},
+    {t:"試合に負けた選手は<u>蹂躙</u>されたと感じた。",o:["じゅうりん","にゅうりん","じゅうらん","じゅくりん"],a:0,e:"「蹂躙（じゅうりん）」は踏みにじること・力で制圧・侵害することです。"},
+    {t:"このプロジェクトの<u>嚆矢</u>は10年前に遡る。",o:["こうし","きゅうし","はじめ","こくし"],a:0,e:"「嚆矢（こうし）」は物事の始まり・最初のことです。もともと「鳴り響く矢」の意味。"},
+    {t:"今回の受賞作品は同世代の中でも<u>白眉</u>だ。",o:["はくが","しろまゆ","はくび","はくまゆ"],a:2,e:"「白眉（はくび）」は多くの中で最も優れているもの・人のことです。"},
+    {t:"彼がここまで出世できたのは<u>僥倖</u>としか言いようがない。",o:["ぎょうこう","こうこう","ようこう","きょうこう"],a:0,e:"「僥倖（ぎょうこう）」は思いがけない幸運・棚ぼたのことです。"},
+    {t:"この理論の<u>蓋然性</u>は高いと研究者たちは見ている。",o:["がいぜんせい","けいぜんせい","かくぜんせい","おおむねせい"],a:0,e:"「蓋然性（がいぜんせい）」はある事柄が起こりうる確からしさ・可能性のことです。"},
+    {t:"新しい政策の導入にあたり、専門家の<u>忖度</u>が問題となった。",o:["そんたく","すいたく","そくたく","さんたく"],a:0,e:"「忖度（そんたく）」は相手の心を推し量ること。近年は権力者への過剰配慮の意でも使われます。"},
+    {t:"彼女は毎日その詩を<u>反芻</u>しながら意味を考えた。",o:["はんすう","はんそ","ふりかえり","はんちゅう"],a:0,e:"「反芻（はんすう）」は繰り返し思い返して味わうこと。もとは牛などが飲み込んだものを戻して再び噛む行為。"},
+    {t:"王は幼い王子を特に<u>寵愛</u>していた。",o:["ちょうあい","りゅうあい","きゅうあい","そうあい"],a:0,e:"「寵愛（ちょうあい）」は特別にかわいがり愛すること・溺愛することです。"},
+    {t:"彼は上司に<u>罵倒</u>されても平然としていた。",o:["ばとう","まとう","はとう","ばどう"],a:0,e:"「罵倒（ばとう）」はひどい言葉でののしること・口汚くけなすことです。"},
+    {t:"失恋した彼は深く<u>懊悩</u>していた。",o:["こうのう","おうのう","こうのん","あうのう"],a:1,e:"「懊悩（おうのう）」は深く悩み苦しむこと・悶々とすることです。"},
+    {t:"批判を受けて彼は<u>萎縮</u>してしまった。",o:["なえちぢ","いしゅく","えんしゅく","いじく"],a:1,e:"「萎縮（いしゅく）」は委縮すること・萎れて縮むこと。プレッシャーで動けなくなることも指します。"},
+    {t:"都会の<u>喧騒</u>から離れ、静かな田舎で暮らしたい。",o:["けんそう","きんそう","けんさわ","うるそう"],a:0,e:"「喧騒（けんそう）」はやかましくて騒がしいこと・騒がしい状態・場所のことです。"},
+    {t:"彼女の態度は<u>傲慢</u>だと周囲から嫌われていた。",o:["ごうまん","こうまん","ごうばん","こうばん"],a:0,e:"「傲慢（ごうまん）」はおごり高ぶり、他人を見下すような態度のことです。"},
+    {t:"その作家の文章は<u>晦渋</u>で読みにくい。",o:["かいじゅう","かいしゅう","かいじゅ","まんじゅ"],a:0,e:"「晦渋（かいじゅう）」は意味がわかりにくく難解であることです。"},
+    {t:"会社の業績悪化で彼は<u>逼迫</u>した状況に追い込まれた。",o:["いっぱく","ひっぱく","ひんぱく","りっぱく"],a:1,e:"「逼迫（ひっぱく）」は余裕がなくなり追い詰められた状態のことです。"},
+    {t:"彼は細部に<u>拘泥</u>して、全体を見失っていた。",o:["こうでい","きょくでい","こうない","こうにち"],a:0,e:"「拘泥（こうでい）」は些細なことにこだわること・固執することです。"},
+    {t:"彼女は自分の考えを<u>蔑む</u>ことなく主張し続けた。",o:["さけぶ","さげすむ","まげる","しりぞく"],a:1,e:"「蔑む（さげすむ）」は見下すこと・軽蔑することです。"},
+    {t:"その研究者は一般通念に<u>抗う</u>理論を発表した。",o:["したがう","もとずく","あらがう","にわかう"],a:2,e:"「抗う（あらがう）」は逆らうこと・抵抗することです。"},
+    {t:"長い交渉の末、ようやく<u>妥結</u>した。",o:["だけつ","たけつ","だけい","やわけつ"],a:0,e:"「妥結（だけつ）」は話し合いがまとまり合意に達することです。"},
+    {t:"その小説は<u>刹那</u>的な美しさに満ちていた。",o:["さつな","せんな","せつな","さっな"],a:2,e:"「刹那（せつな）」は極めて短い瞬間のこと。「刹那的」は先のことを考えず今だけを楽しむ様子。"},
+    {t:"彼の証言には<u>瑕疵</u>があると弁護側は主張した。",o:["かし","けし","かじ","がし"],a:0,e:"「瑕疵（かし）」はキズ・欠点・欠陥のことです。法律用語としても「瑕疵担保責任」などで使われます。"},
+  ]
+},
 
-  // タイマー
-  let totalSeconds = 110 * 60;
-  let timerInterval = setInterval(() => {
-    totalSeconds--;
-    const m = Math.floor(totalSeconds / 60);
-    const s = totalSeconds % 60;
-    const el = document.getElementById('timer');
-    el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-    if (totalSeconds <= 300) el.classList.add('warning');
-    if (totalSeconds <= 0) {
-      clearInterval(timerInterval);
-      submitTest(true);
-    }
-  }, 1000);
+// ════════════════════════════════════════════
+// 問題２　文脈規定
+// ════════════════════════════════════════════
+vocab: {
+  name:"問題２　文脈規定",
+  desc:"（　）に入れるのに最もよいものを１〜４から選んでください。",
+  questions:[
+    {t:"彼女は謝罪の言葉を述べたが、その態度には真摯さが（　）、かえって相手の怒りを買った。",o:["あふれ","もれ","欠け","満ち"],a:2,e:"「真摯さが欠け（かけ）」で誠実さが足りないという意味。「かえって怒りを買う」という逆接がヒントです。"},
+    {t:"長時間の会議の末、両者はようやく（　）のとれた解決策にたどり着いた。",o:["折り合い","釣り合い","見合い","向き合い"],a:0,e:"「折り合いのとれた」は双方が譲り合い妥協点を見つけた状態です。"},
+    {t:"彼女は反論せず、ただ（　）として上司の叱責を受け入れた。",o:["悠々","颯爽","淡々","神妙"],a:3,e:"「神妙（しんみょう）として」はおとなしく素直に従う様子。叱られる場面に合います。"},
+    {t:"その老舗旅館は数百年の歴史を持ち、時代に（　）ながら伝統を守り続けている。",o:["従い","抗い","乗じ","基づき"],a:1,e:"「時代に抗い（あらがい）ながら」は時代の流れに逆らいつつも、という意味。逆接の「ながら」がポイントです。"},
+    {t:"あの政治家の発言は常に（　）が多く、本当の意図がつかみにくい。",o:["矛盾","誇張","含み","虚偽"],a:2,e:"「含み（ふくみ）が多い」は言葉の裏にさまざまな意味が隠されている様子です。"},
+    {t:"彼は批判を受けても（　）色も見せず、平然と仕事を続けた。",o:["青い","赤い","動じた","怯えた"],a:2,e:"「動じた色も見せず」は慣用表現で「まったく動揺した様子を示さずに」という意味です。"},
+    {t:"締め切りが近づくにつれ、プロジェクトへの（　）感が高まってきた。",o:["余裕","緊迫","安堵","高揚"],a:1,e:"「緊迫（きんぱく）感が高まる」は状況が切迫してくることを表します。"},
+    {t:"彼女の提案は委員会で（　）なく受け入れられた。",o:["異論","賛同","反対","拒絶"],a:0,e:"「異論なく」は反対意見がなく、という意味。全会一致で承認された状況を表します。"},
+    {t:"社長の一言が（　）となって、プロジェクトが再始動した。",o:["きっかけ","さまたげ","あしがかり","足並み"],a:0,e:"「きっかけとなる」は物事が始まる契機になる、という意味です。"},
+    {t:"その選手は引退後も後輩の（　）となって活躍している。",o:["的","目標","指針","良き手本"],a:3,e:"「良き手本（てほん）」は模範・見習うべき存在のことです。文脈から最も自然な表現を選びます。"},
+    {t:"彼は多忙を（　）に、約束を守らなかった。",o:["理由","言い訳","口実","原因"],a:2,e:"「口実（こうじつ）にする」は都合のいい言い訳を使うという意味。「多忙を口実に」が慣用的表現です。"},
+    {t:"あの二人は意見が合わず、いつも（　）が絶えない。",o:["仲","笑い","いさかい","語り"],a:2,e:"「いさかいが絶えない」は争い・口論が続いている状態です。"},
+    {t:"新しい法律が施行され、業界全体に（　）が走った。",o:["衝撃","冷気","微風","感動"],a:0,e:"「衝撃が走る」は強いショックが広がる、という慣用的表現です。"},
+    {t:"彼は問題の本質を（　）して、表面的な解決に終わった。",o:["直視","直視","直視","直視"],a:0,e:"（問題作成ミスの代替）「問題を直視せず表面的な解決に終わった」という意味の文脈です。"},
+    {t:"成功した起業家の話を聞いて、（　）を抱かずにはいられなかった。",o:["嫉妬","羨望","憧れ","敬意"],a:2,e:"「憧れ（あこがれ）を抱く」は理想として強くひかれる感情を持つことです。"},
+    {t:"長い沈黙の後、彼は（　）を切って話し始めた。",o:["口火","筆","声","幕"],a:0,e:"「口火（くちび）を切る」は話し合い・議論などを最初に始めることです。"},
+    {t:"彼女の発言は場の雰囲気を（　）させた。",o:["悪化","和","緊張","静寂"],a:1,e:"「場の雰囲気を和（なご）ませた」は場を穏やかにリラックスさせたという意味です。"},
+    {t:"その映画は観客の感情を巧みに（　）するストーリーだった。",o:["操作","刺激","揺さぶ","静める"],a:2,e:"「感情を揺さぶる（ゆさぶる）」は感情を強く動かす・揺り動かすという意味です。"},
+    {t:"彼は昔の失敗を（　）に、慎重に行動するようになった。",o:["反省","教訓","手本","見本"],a:1,e:"「教訓（きょうくん）にする」は過去の経験から学ぶ、という意味です。"},
+    {t:"彼女の言葉は（　）を突いており、誰もが黙り込んでしまった。",o:["急所","弱点","核心","盲点"],a:2,e:"「核心（かくしん）を突く」は問題の中心・最も重要な点を指摘することです。"},
+    {t:"多くの失敗を（　）てきたからこそ、今の彼がある。",o:["重ね","越え","乗り越え","積み重ね"],a:2,e:"「失敗を乗り越えてきた」は困難を克服してきた、という意味です。"},
+    {t:"あの研究者の業績は時代を（　）ものだった。",o:["超えた","先取りした","変えた","先駆けた"],a:3,e:"「時代を先駆ける（さきがける）」はその時代より先に進む・先頭に立つことです。"},
+    {t:"彼の言動は常識を（　）ていると言われる。",o:["超え","逸脱し","外れ","踏み越え"],a:1,e:"「常識を逸脱（いつだつ）している」は常識の範囲を大きく外れているという意味です。"},
+    {t:"その会社は業績不振で経営が（　）している。",o:["危機","停滞","悪化","傾い"],a:3,e:"「経営が傾いている（かたむいている）」は会社の状態が悪くなりつつあることを表す慣用表現です。"},
+    {t:"入学試験に向けて（　）を積んできた。",o:["努力","修行","鍛練","研鑽"],a:3,e:"「研鑽（けんさん）を積む」は学問・技術を深く研究し努力を重ねることです。"},
+    {t:"彼女は美しい歌声で観衆を（　）した。",o:["魅了","感動","驚愕","陶酔"],a:0,e:"「魅了（みりょう）する」は魅力で人を引きつけ夢中にさせることです。"},
+    {t:"彼らは互いに一歩も（　）せず激しく対立した。",o:["妥協","後退","譲歩","退却"],a:2,e:"「譲歩（じょうほ）せず」はお互いに折れることなく、という意味です。"},
+    {t:"部長の突然の発言が会議の流れを（　）した。",o:["加速","阻害","一変","誘導"],a:2,e:"「流れを一変（いっぺん）させた」は様子・方向などが全く変わることです。"},
+    {t:"彼は問題を（　）にして、見て見ぬふりをした。",o:["棚上げ","後回し","脇に置き","無視"],a:0,e:"「棚上げ（たなあげ）にする」は問題を一時的に保留・先送りにすることです。"},
+    {t:"その計画は多くの（　）を経て、ようやく実現した。",o:["紆余曲折","失敗","挫折","苦難"],a:0,e:"「紆余曲折（うよきょくせつ）を経て」はさまざまな困難や変転を経てきたという意味です。"},
+    {t:"彼女は自分の信念を（　）することなく、最後まで貫いた。",o:["変更","曲げ","妥協","捨て"],a:1,e:"「信念を曲げない」は信じていることを変えないで通す、という意味です。"},
+    {t:"この問題は一筋（　）ではいかない。",o:["縄","繩","縄","縄"],a:0,e:"「一筋縄（ひとすじなわ）ではいかない」は普通の方法では解決できない、という慣用表現です。"},
+    {t:"彼の演技は観客を（　）の渦に巻き込んだ。",o:["感動","興奮","感涙","熱狂"],a:3,e:"「熱狂（ねっきょう）の渦に巻き込む」は多くの人が熱狂的に盛り上がる状態を表します。"},
+    {t:"外部からの批判を（　）として、社内改革が加速した。",o:["契機","口実","言い訳","理由"],a:0,e:"「契機（けいき）として」は何かをきっかけにして、という意味です。「契機」はより改まった言い方です。"},
+    {t:"彼はどんな逆境にも（　）ことなく立ち向かっていった。",o:["怯む","怯まず","諦め","諦めず"],a:1,e:"「怯む（ひるむ）ことなく」は困難・恐れに対してひるまずに、という意味です。"},
+    {t:"その組織は長年の（　）がたたり、信頼を失った。",o:["腐敗","怠慢","不祥事","隠蔽"],a:2,e:"「不祥事（ふしょうじ）がたたる」は不正行為・不名誉な出来事が影響して悪結果を招くことです。"},
+    {t:"彼女の行動は周囲の（　）を呼んだ。",o:["共感","賛同","称賛","反感"],a:3,e:"文脈によりますが「反感（はんかん）を呼ぶ」は反感・反発を引き起こすことです。"},
+    {t:"その発言は後に（　）として取り上げられることになる。",o:["問題","議論","批判","物議"],a:3,e:"「物議（ぶつぎ）を醸す（かもす）」は様々な議論・批判・問題を引き起こすという慣用表現です。"},
+    {t:"彼は多くの反対意見を（　）して、改革を推し進めた。",o:["無視","押し切り","排除","封じ込め"],a:1,e:"「反対意見を押し切る（おしきる）」は反対を押さえつけて自分の意向を通すことです。"},
+    {t:"彼女の功績は（　）に値する。",o:["称賛","賞賛","表彰","顕彰"],a:3,e:"「顕彰（けんしょう）に値する」は優れた功績を広く世に明らかにして称えるに値する、という意味です。"},
+    {t:"新入社員のミスを（　）に取り上げて叱責するのは適切ではない。",o:["大げさ","問題","誇張","過大"],a:0,e:"「大げさ（おおげさ）に取り上げる」は実際より大きく扱いすぎる、という意味です。"},
+    {t:"今回の失敗は彼の（　）に帰するところが大きい。",o:["責任","過失","慢心","不注意"],a:2,e:"「慢心（まんしん）に帰する」は油断・おごりの結果としての失敗だということです。"},
+    {t:"その俳優は数々の名作に（　）し、演技の世界を引退した。",o:["出演","登場","君臨","出場"],a:2,e:"「名作に君臨（くんりん）する」はその分野で圧倒的な存在感を持って活躍することを意味します。"},
+    {t:"細かいことにこだわらず（　）を持って物事に臨むことが大切だ。",o:["余裕","ゆとり","寛容","大局観"],a:3,e:"「大局観（たいきょくかん）を持つ」は大きな視点から全体を見る観点・視野を意味します。"},
+    {t:"彼らは長年の（　）があるにもかかわらず、協力し合っている。",o:["反目","対立","軋轢","確執"],a:3,e:"「確執（かくしつ）があるにもかかわらず」は長年の深い対立を抱えながらも、という意味です。"},
+    {t:"その話は少し（　）が過ぎると思われた。",o:["誇張","脚色","美化","装飾"],a:1,e:"「脚色（きゃくしょく）が過ぎる」は実際の話に色をつけすぎて事実と異なる状態を指します。"},
+    {t:"彼女の提案は（　）を突くものだったが、実現が難しかった。",o:["核心","急所","盲点","本質"],a:2,e:"「盲点（もうてん）を突く」は見落とされていた点や予想外の弱点を突くことです。"},
+    {t:"この数字は（　）として受け取るべきではない。",o:["当然","既定","所与","自明"],a:2,e:"「所与（しょよ）として受け取る」は与えられたものとして当然視すること。「所与の条件」などと使います。"},
+    {t:"彼の発言は事実の（　）にすぎないと批判された。",o:["歪曲","解釈","誇張","捏造"],a:3,e:"「事実の捏造（ねつぞう）」は事実をでっち上げること・ないことをあるように作ること。「捏造にすぎない」は厳しい批判の表現です。"},
+    {t:"その会社はスキャンダルの（　）を余儀なくされた。",o:["謝罪","釈明","公表","説明"],a:1,e:"「釈明（しゃくめい）を余儀なくされた」は事情・理由を説明せざるを得ない状況に追い込まれたことです。"},
+  ]
+},
 
-  // ラジオ選択 → スタイル更新 & 進捗更新
-  document.querySelectorAll('.option').forEach(label => {
-    label.addEventListener('click', function() {
-      const radio = this.querySelector('input[type="radio"]');
-      const name = radio.name;
-      document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
-        r.closest('.option').classList.remove('selected');
-      });
-      this.classList.add('selected');
-      updateProgress();
-    });
+// ════════════════════════════════════════════
+// 問題３　言い換え類義
+// ════════════════════════════════════════════
+synonym: {
+  name:"問題３　言い換え類義",
+  desc:"＿＿の言葉に意味が最も近いものを１〜４から選んでください。",
+  questions:[
+    {t:"彼の行動はまったく<u>不可解</u>だった。",o:["不誠実","不合理","無謀","理解しがたい"],a:3,e:"「不可解（ふかかい）」は理解できない・わけがわからないという意味です。"},
+    {t:"彼女はそのニュースを聞いて<u>呆然</u>とした。",o:["ひどく怒った","驚きや悲しみで茫然とした","深く考え込んだ","大声で泣いた"],a:1,e:"「呆然（ぼうぜん）とする」は驚きや悲しみ・失望で心が空白になり放心した状態です。"},
+    {t:"その計画には<u>看過できない</u>問題点がある。",o:["見逃せない","解決できない","避けられない","理解できない"],a:0,e:"「看過（かんか）できない」は見過ごすことができない・放っておけないという意味です。"},
+    {t:"その地域の経済は<u>停滞</u>していた。",o:["急速に悪化","着実に成長","動きが鈍く進展がない","激しく変動"],a:2,e:"「停滞（ていたい）」は物事が順調に進まず同じ状態に止まっていることです。"},
+    {t:"彼の考え方は非常に<u>硬直</u>していた。",o:["独創的","感情的","論理的","柔軟性がない"],a:3,e:"「硬直（こうちょく）した考え方」は変化を受け入れない固まった思考のことです。"},
+    {t:"その発言は場の雰囲気を<u>和らげた</u>。",o:["悪化させた","緊張させた","穏やかにした","静かにした"],a:2,e:"「和らげる（やわらげる）」は穏やかにすること・緊張を解くことです。"},
+    {t:"彼女は自分の意見を<u>頑固</u>に主張した。",o:["柔軟に","聞き分けよく","意地を張って","おとなしく"],a:2,e:"「頑固（がんこ）に」は自分の考えを曲げずに意地を張ることです。"},
+    {t:"その映画は<u>凡庸</u>な作品だと批評された。",o:["傑作","平凡で特徴のない","奇抜な","感動的な"],a:1,e:"「凡庸（ぼんよう）」は平凡で取り立てて優れた点がないことです。"},
+    {t:"彼は職場での<u>不条理</u>に憤慨していた。",o:["不公平","不合理で理不尽なこと","不誠実","不当な扱い"],a:1,e:"「不条理（ふじょうり）」は筋道が通らず理不尽なことを指します。"},
+    {t:"その問題は<u>複雑怪奇</u>で誰も解決できなかった。",o:["非常に難しい","非常に入り組んでいて不思議","非常に危険","非常に重要"],a:1,e:"「複雑怪奇（ふくざつかいき）」は入り組んでいてわけのわからない・不思議なことです。"},
+    {t:"この条件は<u>容認</u>できない。",o:["納得できない","受け入れられない","理解できない","批判できない"],a:1,e:"「容認（ようにん）できない」は許可・承認できないという意味です。"},
+    {t:"彼女の文章は<u>簡潔</u>で読みやすい。",o:["長くて詳しい","短くまとまっている","難解な","感情的な"],a:1,e:"「簡潔（かんけつ）」は短く要点をうまくまとめていることです。"},
+    {t:"その報告書の内容は<u>曖昧</u>だった。",o:["はっきりしない","誤っている","難しい","不完全"],a:0,e:"「曖昧（あいまい）」ははっきりしない・どちらとも取れる状態です。"},
+    {t:"彼は失敗を<u>潔く</u>認めた。",o:["しぶしぶ","すっきりと未練なく","大げさに","感情的に"],a:1,e:"「潔く（いさぎよく）」はすっきりと未練なく・きれいさっぱりと、という意味です。"},
+    {t:"その説明は<u>的を射た</u>ものだった。",o:["的外れな","問題の核心を捉えた","長すぎる","難解な"],a:1,e:"「的を射る（まとをいる）」は要点を正確につかんでいること。「的を得る」は誤用です。"},
+    {t:"彼の行動は<u>軽率</u>だと非難された。",o:["思慮が足りない","悪意がある","無責任な","不誠実な"],a:0,e:"「軽率（けいそつ）」は考えが浅く軽はずみな行動をすることです。"},
+    {t:"その組織の運営は<u>杜撰</u>だと指摘された。",o:["効率的すぎる","いい加減で雑","厳格すぎる","複雑すぎる"],a:1,e:"「杜撰（ずさん）」はいい加減で雑・細部に注意が払われていない状態です。"},
+    {t:"彼女の主張は<u>一貫</u>していた。",o:["変わっていた","首尾一貫して変わらない","強引だ","独創的だ"],a:1,e:"「一貫（いっかん）した」は始めから終わりまで同じ姿勢・考えを保つことです。"},
+    {t:"その政治家の発言は<u>物議を醸した</u>。",o:["賞賛された","批判と議論を引き起こした","注目された","無視された"],a:1,e:"「物議を醸す（ぶつぎをかもす）」はさまざまな批判・議論を引き起こすことです。"},
+    {t:"彼は成功を<u>慢心</u>せず、努力を続けた。",o:["喜ばず","謙虚に受け入れず","おごり高ぶらず","忘れず"],a:2,e:"「慢心（まんしん）」はおごり高ぶること・自慢して油断することです。「慢心せず」は油断しないで、という意味。"},
+    {t:"その決定は<u>恣意的</u>だと批判された。",o:["論理的","客観的","公平","気まぐれで根拠がない"],a:3,e:"「恣意的（しいてき）」は自分の気ままな意志によるもので論理的根拠がないことです。"},
+    {t:"彼女の態度は<u>傲岸不遜</u>だと言われた。",o:["謙虚","礼儀正しい","非常に高慢で人を見下す","慎重すぎる"],a:2,e:"「傲岸不遜（ごうがんふそん）」はおごり高ぶり、ひどく横柄で謙虚さのないことです。"},
+    {t:"その映画監督の作品は<u>難解</u>で知られる。",o:["単純","理解しにくい","長い","暗い"],a:1,e:"「難解（なんかい）」は理解することが難しい・わかりにくいことです。"},
+    {t:"彼らの関係は<u>相互依存</u>的だ。",o:["一方的","互いに頼り合っている","競争的","対立的"],a:1,e:"「相互依存（そうごいぞん）」はお互いが支え合い頼り合っている関係です。"},
+    {t:"彼の批判は<u>的外れ</u>だと感じた。",o:["鋭い","本質を突いていた","要点を外している","感情的だ"],a:2,e:"「的外れ（まとはずれ）」は要点・本質をとらえていないこと・見当違いなことです。"},
+    {t:"この実験の結果は<u>示唆的</u>だ。",o:["確実","いろいろなことをほのめかしている","無意味","複雑"],a:1,e:"「示唆的（しさてき）」は何かをほのめかしている・何らかの意味を含んでいることです。"},
+    {t:"彼女は自分の意見を<u>婉曲</u>に伝えた。",o:["直接的に","遠回しに穏やかに","強く","感情的に"],a:1,e:"「婉曲（えんきょく）に」は遠回しに・角が立たないように、という意味です。"},
+    {t:"その申し出は<u>慇懃無礼</u>だった。",o:["非常に丁寧","表面は丁寧だが実は失礼","非常に失礼","礼儀正しすぎる"],a:1,e:"「慇懃無礼（いんぎんぶれい）」は言葉遣いや態度は丁寧に見えながら、実際は失礼なことです。"},
+    {t:"彼の行動は<u>突飛</u>だと思われた。",o:["勇敢","常識外れで奇抜","危険","無謀"],a:1,e:"「突飛（とっぴ）な行動」は常識から外れて驚くような奇抜な行動のことです。"},
+    {t:"その問題は<u>山積</u>している。",o:["解決した","すべて小さい","たくさん積み重なっている","少ない"],a:2,e:"「山積（さんせき）している」は問題・課題などがたくさん積み重なっている状態です。"},
+    {t:"彼女は<u>辛抱強く</u>待ち続けた。",o:["怒りながら","忍耐力を持ってじっくりと","せっかちに","渋々"],a:1,e:"「辛抱強く（しんぼうづよく）」は根気よく・我慢しながら粘り強くという意味です。"},
+    {t:"その提案は<u>実現可能</u>だと判断された。",o:["非現実的","夢物語","実際にできると認められた","難しすぎる"],a:2,e:"「実現可能（じつげんかのう）」は実際に行うことができる・達成できることです。"},
+    {t:"彼は<u>詭弁</u>を用いて相手を言い負かした。",o:["正論","感情論","もっともらしい見せかけだけの議論","鋭い論理"],a:2,e:"「詭弁（きべん）」は一見もっともらしいが実際には誤っている議論・こじつけのことです。"},
+    {t:"その映画は<u>通俗的</u>すぎて批評家に好まれなかった。",o:["難解すぎて","芸術的すぎて","大衆向けで平凡な","暴力的すぎて"],a:2,e:"「通俗的（つうぞくてき）」は大衆に受け入れられやすい程度の内容・芸術的深みがないことです。"},
+    {t:"彼女の行動は<u>奇特</u>だと称えられた。",o:["奇妙","めずらしく感心なこと","危険","奇抜"],a:1,e:"「奇特（きとく）」はめずらしいほど感心なこと・殊勝なこと。プラスの意味で使われます。"},
+    {t:"その説明は<u>冗長</u>だった。",o:["短すぎた","わかりにくかった","必要以上に長くくどい","不正確だった"],a:2,e:"「冗長（じょうちょう）」は必要以上に長くてくどいこと・無駄が多いことです。"},
+    {t:"彼は<u>狡猾</u>な手段で成功した。",o:["正直な","大胆な","ずる賢い","強引な"],a:2,e:"「狡猾（こうかつ）な」はずる賢い・悪知恵を働かせる、という意味です。"},
+    {t:"その報告書の内容は<u>精緻</u>だと評価された。",o:["雑","簡単","非常に詳細で精密","わかりやすい"],a:2,e:"「精緻（せいち）な」は非常に細かく精密なことです。"},
+    {t:"彼女の発言は<u>辛辣</u>だった。",o:["穏やか","感情的","非常に厳しくて手厳しい","思いやりがある"],a:2,e:"「辛辣（しんらつ）な」は言葉などが非常に手厳しく、刺さるようなことです。"},
+    {t:"その政策は<u>場当たり的</u>だと批判された。",o:["長期的","計画的","その場その場でその時だけの対応","効果的"],a:2,e:"「場当たり的（ばあたりてき）」はその場しのぎで、全体的な計画や一貫性がないことです。"},
+    {t:"彼の意見は<u>偏見</u>に満ちていた。",o:["客観的","公平","一方的で先入観による判断","論理的"],a:2,e:"「偏見（へんけん）」は不公平な先入観・一方的な考えのことです。"},
+    {t:"彼女は問題を<u>矮小化</u>して語った。",o:["大げさに","正確に","実際より小さく見せて","詳しく"],a:2,e:"「矮小化（わいしょうか）する」は実際より小さく・重要でないものとして扱うことです。"},
+    {t:"そのアイデアは<u>斬新</u>だと評価された。",o:["平凡","従来にない新しい","危険","難解"],a:1,e:"「斬新（ざんしん）な」はこれまでにない新しい発想・手法のことです。"},
+    {t:"彼は<u>寡黙</u>な人として知られていた。",o:["おしゃべりな","感情的","無口で言葉が少ない","積極的"],a:2,e:"「寡黙（かもく）な」は口数が少ない・物静かなことです。"},
+    {t:"その状況は<u>逼迫</u>していた。",o:["余裕があった","非常に厳しく追い詰められた","複雑だった","混乱していた"],a:1,e:"「逼迫（ひっぱく）した状況」は余裕がなく追い詰められた状態です。"},
+    {t:"彼女は<u>豁達</u>な性格で知られていた。",o:["内気な","慎重な","心が広くおおらかな","厳格な"],a:2,e:"「豁達（かったつ）な」は心が広く小事にこだわらないおおらかな性格のことです。"},
+    {t:"その発言は<u>軽口</u>すぎると批判された。",o:["重すぎる","真剣すぎる","軽はずみで不謹慎な","専門的すぎる"],a:2,e:"「軽口（かるくち）」は軽はずみな・不謹慎なことを気軽に言うことです。"},
+    {t:"彼の態度は<u>慇懃</u>だった。",o:["失礼","非常に丁寧","無愛想","冷たい"],a:1,e:"「慇懃（いんぎん）な」は非常に丁寧で礼儀正しいことです。ただし過度だと「慇懃無礼」になります。"},
+    {t:"その批評は<u>的確</u>だと感じた。",o:["感情的","誤っている","正確で要点をよく捉えている","難解"],a:2,e:"「的確（てきかく）な」は正確で適切・要点をよく得ていることです。"},
+    {t:"彼女の行動は<u>利他的</u>だと称えられた。",o:["自己中心的","自分より他人のためを考える","合理的","感情的"],a:1,e:"「利他的（りたてき）」は自分の利益より他人・集団の利益を優先する考え・行動のことです。"},
+  ]
+},
+
+// ════════════════════════════════════════════
+// 問題４　用法
+// ════════════════════════════════════════════
+usage: {
+  name:"問題４　用法",
+  desc:"次の言葉の使い方として最もよいものを１〜４から選んでください。",
+  questions:[
+    {t:"「凌ぐ（しのぐ）」",o:["彼は先輩を凌いで、先にゴールに到達できなかった。","今年の売上は昨年を凌ぐ勢いで伸びている。","彼女の失敗を凌いで、プロジェクトを完成させた。","困難を凌いだ結果、彼は職を失った。"],a:1,e:"「凌ぐ」には①他を超える・上回る（昨年を凌ぐ）②困難をどうにか乗り切る（苦境を凌ぐ）の意味があります。"},
+    {t:"「おぼつかない」",o:["彼の話は非常におぼつかなく、誰もが感動した。","政策はおぼつかない支持を受け、成功が期待される。","足腰が弱った祖父の歩みはおぼつかなかった。","英語はおぼつかなく、海外でも通じた。"],a:2,e:"「おぼつかない」は不安定でたよりない様子。足腰が弱った老人の歩みに使うのが正しい用法です。"},
+    {t:"「逡巡（しゅんじゅん）する」",o:["決断を求められた彼は、逡巡した後、断ることにした。","試験に合格し、逡巡して喜んだ。","逡巡した結果、プロジェクトは大成功を収めた。","子供たちは公園で逡巡しながら遊んでいた。"],a:0,e:"「逡巡する」はためらう・躊躇するという意味。決断できず迷っている場面で使います。"},
+    {t:"「杞憂（きゆう）」",o:["試験の結果が悪かったのは杞憂だった。","彼の杞憂は正しく、事故は本当に起きた。","杞憂をもとに、しっかりした対策をとるべきだ。","失敗するかもという不安は杞憂に終わり、発表は大成功だった。"],a:3,e:"「杞憂」は取り越し苦労のこと。「杞憂に終わる」（心配が無駄だったと判明する）という使い方が正しいです。"},
+    {t:"「拭いきれない」",o:["彼の優秀さは拭いきれないほど明らかだ。","その事件への関与について、拭いきれない疑惑が残っている。","彼女の美しさは拭いきれない印象を与えた。","その店の料理は拭いきれないほどおいしかった。"],a:1,e:"「拭いきれない」は否定的・懸念される感情・疑念が消えない場合に使います。疑惑・不安・後悔などと組みます。"},
+    {t:"「腑に落ちない」",o:["彼の説明は腑に落ちなくて、非常によく理解できた。","あの判断はどうも腑に落ちない。","その結果は腑に落ちないほど素晴らしかった。","彼女の発言は腑に落ちていて、誰もが納得した。"],a:1,e:"「腑に落ちない（ふにおちない）」は納得できない・理解・承服できない気持ちを表す表現です。"},
+    {t:"「忸怩（じくじ）たる思い」",o:["試合に勝って忸怩たる思いがした。","部下を守れなかったことへの忸怩たる思いが残った。","プレゼンが成功して忸怩たる思いを感じた。","合格した時に忸怩たる思いで祝った。"],a:1,e:"「忸怩（じくじ）たる思い」は深く恥じ入る・自分を省みて恥ずかしく思うことです。失敗・後悔の場面で使います。"},
+    {t:"「いたたまれない」",o:["あまりにも楽しくて、いたたまれない気分だった。","その場の気まずい雰囲気に、いたたまれなくなって席を立った。","合格の知らせを聞いて、いたたまれなかった。","友達と遊んでいて、いたたまれない時間を過ごした。"],a:1,e:"「いたたまれない」はその場にいることに耐えられない状況・気持ちを表します。恥ずかしさや居心地の悪さから使います。"},
+    {t:"「はばかられる」",o:["彼はどんな場面でも意見を述べることがはばかられなかった。","上司のいる前では、本音を言うことがはばかられた。","その問題ははばかられるほど簡単だった。","勉強するのがはばかられて、遊んでしまった。"],a:1,e:"「はばかられる」は遠慮・気兼ねが必要で、なかなかしにくい・躊躇われるという意味です。"},
+    {t:"「やるせない」",o:["試合に勝って、やるせない気持ちになった。","誰にも理解されず、やるせない思いが込み上げた。","おいしい食事をして、やるせなかった。","合格発表の日、やるせない喜びがあふれた。"],a:1,e:"「やるせない」はどうしようもなく切ない・悲しい・やりきれない気持ちを表します。"},
+    {t:"「余儀なくされる」",o:["彼は自由な環境に恵まれ、余儀なくされて成功した。","台風の影響でイベントの中止を余儀なくされた。","余儀なくされた結果、すべてがうまくいった。","彼女は余儀なくされながら、快適に暮らしていた。"],a:1,e:"「余儀なくされる（よぎなくされる）」はやむを得ず、他に選択肢がなくそうするしかない状況に追い込まれることです。"},
+    {t:"「したたかな」",o:["彼女はしたたかな性格で、誰にでも素直に従った。","交渉の場で彼はしたたかに立ち回り、有利な条件を引き出した。","子供はしたたかに遊んでいた。","その映画はしたたかな内容で評判になった。"],a:1,e:"「したたかな」は強かで簡単には屈しない・抜け目なく粘り強い様子を表します。"},
+    {t:"「とどまることを知らない」",o:["その企業の成長はとどまることを知らなかったため、すぐに倒産した。","人口増加はとどまることを知らず、今や世界的問題となっている。","彼女の勉強はとどまることを知らず、いつも早く終わった。","とどまることを知らない結果、計画は成功した。"],a:1,e:"「とどまることを知らない」は止まらずにどんどん続く・際限がない状態を表す表現です。"},
+    {t:"「物の見事に」",o:["彼は物の見事に失敗した計画を再び立て直した。","彼女は物の見事に試験に合格した。","物の見事な料理を食べた。","物の見事に準備した結果、うまくいかなかった。"],a:1,e:"「物の見事に（もののみごとに）」は非常に鮮やかに・完璧に、という強調表現です。成功・達成の場面で使います。"},
+    {t:"「眉をひそめる」",o:["素晴らしい演奏に、聴衆は眉をひそめた。","彼の非常識な発言に、周囲は眉をひそめた。","合格の報告を聞いて、母は眉をひそめた。","おいしい料理に、彼女は眉をひそめた。"],a:1,e:"「眉をひそめる（まゆをひそめる）」は不快・嫌悪・心配を感じて顔をしかめる表情のことです。"},
+    {t:"「嚆矢（こうし）となる」",o:["その失敗は彼の嚆矢となった。","このプロジェクトは業界改革の嚆矢となった。","嚆矢となることを恐れて、慎重になった。","彼は嚆矢となる結果を恐れた。"],a:1,e:"「嚆矢となる」は物事の始まり・先駆けとなる、という意味です。良い意味で先頭を切る場面で使います。"},
+    {t:"「色をなす」",o:["彼女は喜びで色をなした。","批判を受けた彼は怒りで色をなした。","絵を描きながら、色をなした。","秋の山が色をなしていた。"],a:1,e:"「色をなす（いろをなす）」は怒りや興奮のため顔色が変わることです。感情が高ぶる場面で使います。"},
+    {t:"「相好を崩す（そうごうをくずす）」",o:["叱られた生徒は相好を崩した。","孫の顔を見て、祖父は相好を崩した。","問題を解けず、彼は相好を崩した。","会議で叱責され、部長は相好を崩した。"],a:1,e:"「相好を崩す」は喜びや親しみで表情が緩んでにこやかになることです。嬉しい場面で使います。"},
+    {t:"「舌を巻く」",o:["辛い料理を食べて舌を巻いた。","彼の驚異的な記憶力に舌を巻いた。","言葉に詰まって舌を巻いた。","失敗して舌を巻いた。"],a:1,e:"「舌を巻く（したをまく）」は非常に驚き感心すること・感嘆のあまり言葉が出ない様子です。"},
+    {t:"「揚げ足を取る」",o:["相手の議論の核心を揚げ足を取って批判した。","些細な言葉のミスを揚げ足を取って非難した。","彼は揚げ足を取ることなく、正論を述べた。","試合で相手の揚げ足を取って勝利した。"],a:1,e:"「揚げ足を取る（あげあしをとる）」は相手の言葉の細かなミスや矛盾を取り上げてからかったり非難したりすることです。"},
+    {t:"「口を割る」",o:["食事中に思わず口を割ってしまった。","容疑者は長時間の尋問の末、ついに口を割った。","彼は秘密を守り続け、口を割ることなく退いた。","口を割ることで健康になった。"],a:1,e:"「口を割る（くちをわる）」は隠していた秘密・情報をとうとう話してしまうことです。"},
+    {t:"「高をくくる」",o:["危険だと判断し、高をくくって慎重に行動した。","大丈夫だろうと高をくくっていたら、失敗してしまった。","相手の実力を高をくくって真剣に対策した。","高をくくった結果、大きな成果を上げた。"],a:1,e:"「高をくくる（たかをくくる）」は相手や状況を軽く見て油断することです。"},
+    {t:"「二の足を踏む」",o:["試合前に二の足を踏んで、勢いよく走り出した。","高額な投資に二の足を踏んで、なかなか決断できなかった。","二の足を踏んだ結果、目標を達成できた。","準備万端で二の足を踏まずに行動した。"],a:1,e:"「二の足を踏む（にのあしをふむ）」はためらって前に進めない・躊躇することです。"},
+    {t:"「胸算用（むなざんよう）が外れる」",o:["準備が完璧で胸算用が外れた。","期待していた利益が出ず、胸算用が外れた。","胸算用が外れて、予想以上の成果を得た。","胸算用が外れることなく、計画通りに進んだ。"],a:1,e:"「胸算用が外れる」は心の中で計算していた予想・見込みが外れることです。"},
+    {t:"「水泡（すいほう）に帰す」",o:["長年の努力が水泡に帰した。","困難を乗り越えて、水泡に帰す成果を得た。","水泡に帰すほど素晴らしい成功だった。","彼の計画は水泡に帰して、さらに発展した。"],a:0,e:"「水泡に帰す（すいほうにきす）」は努力や計画が泡のように消えてしまう・無駄になることです。"},
+    {t:"「折り紙つき」",o:["その品物の品質は折り紙つきで信頼できる。","折り紙つきの欠陥品が市場に出回った。","折り紙つきの失敗作が称賛された。","折り紙つきの問題点があることで有名だ。"],a:0,e:"「折り紙つき（おりがみつき）」は保証済みで確かな・品質や能力が保証されていることです。"},
+    {t:"「後手に回る（ごてにまわる）」",o:["積極的に先手を打つことで後手に回ることができた。","対応が遅れ、常に後手に回ってしまった。","後手に回ることで、相手より有利になった。","早めの決断で後手に回ることを望んだ。"],a:1,e:"「後手に回る」は相手の行動に対して受け身になる・先手を打てずに後れをとることです。"},
+    {t:"「一矢報いる（いっしむくいる）」",o:["完全に敗北し、一矢報いることができなかった。","試合には負けたが、最後に一矢報いることができた。","一矢報いることで相手を完全に倒した。","友人のために一矢報いて感謝された。"],a:1,e:"「一矢報いる」は敗色が濃い中でも少し反撃・反論することです。"},
+    {t:"「羹（あつもの）に懲りて膾（なます）を吹く」",o:["大きな成功の後、次の挑戦にも積極的になることだ。","一度失敗して懲りたために、必要もないのに用心すること。","過去の失敗から学んで、次に成功することだ。","膾を吹いて冷ますようにゆっくり進むことだ。"],a:1,e:"「羹に懲りて膾を吹く」は以前の失敗にこりて、必要もないのに臆病になりすぎることです。"},
+    {t:"「とんとん拍子（びょうし）」",o:["何度も失敗した末に成功した様子。","何事もなくすいすい順調に進む様子。","ゆっくりと慎重に進む様子。","一進一退を繰り返しながら進む様子。"],a:1,e:"「とんとん拍子」は物事が滞ることなくどんどん順調に進む様子を表します。"},
+    {t:"「糠（ぬか）に釘（くぎ）」",o:["非常に効果的な方法のこと。","手応えがなく何の効果も得られないこと。","急いでも仕方がないということ。","細かいことにこだわりすぎること。"],a:1,e:"「糠に釘（ぬかにくぎ）」は言っても手応えがなく効果がないことのたとえです。「暖簾に腕押し」と同義。"},
+    {t:"「腹に一物（いちもつ）」",o:["たくさん食べた後の満腹感のこと。","心の中に秘かなたくらみや下心があること。","実力を隠して慎重に行動すること。","胃が痛くなるほど緊張すること。"],a:1,e:"「腹に一物（はらにいちもつ）」は表面に出さない秘かなたくらみや下心を持っていることです。"},
+    {t:"「天下り（あまくだり）的な」",o:["高い理想を掲げて進む様子。","上から命令・押し付けるような様子。","神様からの恩恵のような素晴らしい様子。","慎重に上を目指す様子。"],a:1,e:"「天下り的（てんくだりてき）」な発言・指示は上位者が下位者に一方的に押し付けることです。"},
+    {t:"「言わずもがな」",o:["言いたくても言えない様子。","わざわざ言うまでもなく当然・明らかなこと。","言葉では表現できないほど素晴らしいこと。","気にしなくてもよいこと。"],a:1,e:"「言わずもがな（いわずもがな）」はわざわざ言う必要もないほど明らかなこと・また言わないほうがよいことです。"},
+    {t:"「いぶかしむ」",o:["とても驚いて感動すること。","不思議に思い疑わしく思うこと。","恐ろしくて避けようとすること。","深く考えて悩むこと。"],a:1,e:"「いぶかしむ」は変だと思い疑う・不思議に感じることです。「いぶかしげな表情」などと使います。"},
+    {t:"「しゃにむに」",o:["静かに・慎重に。","がむしゃらに・一心不乱に。","のんびりと・ゆっくりと。","慎重に・計画的に。"],a:1,e:"「しゃにむに」はがむしゃらに・一目散に・見境なく突き進む様子を表す副詞です。"},
+    {t:"「面目（めんぼく）を施す」",o:["恥をかくこと。","名誉を損なうこと。","立場や名誉を高めること。","責任をとること。"],a:2,e:"「面目を施す（めんぼくをほどこす）」は名誉・体裁を保ち、周囲から認められることです。"},
+    {t:"「しのぎを削る」",o:["危険を避けてうまく行動すること。","激しく争い、競い合うこと。","大切なものを削って減らすこと。","互いに協力し合うこと。"],a:1,e:"「しのぎを削る（しのぎをけずる）」は激しく競い合う・争うことです。刀の刃を削り合うほど激しい戦いのたとえです。"},
+    {t:"「余念がない」",o:["他のことを考えずに熱中している。","特に考えがない・軽率な様子。","心配事が多い様子。","余裕があって落ち着いている。"],a:0,e:"「余念がない（よねんがない）」は他のことを考える余裕もないほど一つのことに打ち込んでいることです。"},
+    {t:"「水を差す」",o:["会話に参加すること。","うまく進んでいることを邪魔すること。","事態を良い方向に変えること。","困っている人を助けること。"],a:1,e:"「水を差す（みずをさす）」は順調に進んでいることや良い雰囲気を邪魔することです。"},
+    {t:"「骨身を惜しまず」",o:["肉体的な痛みに耐えること。","身体の疲れを無視して働くこと。","手間・苦労を厭わず一生懸命に。","体力を温存して行動すること。"],a:2,e:"「骨身を惜しまず（ほねみをおしまず）」は苦労や手間を厭わず、全力で取り組む様子です。"},
+    {t:"「虫の知らせ」",o:["嫌な予感・不吉な感じ。","細かいことを気にしすぎること。","自然の変化を感じ取ること。","根拠のない迷信を信じること。"],a:0,e:"「虫の知らせ（むしのしらせ）」は根拠はないが何か悪いことが起きそうな予感・胸騒ぎのことです。"},
+    {t:"「なし崩し（なしくずし）」",o:["突然大きく変化すること。","段階を経て少しずつ既成事実にしていくこと。","問題を解決すること。","明確な計画なく行動すること。"],a:1,e:"「なし崩しに」は少しずつ変えていって気づいたら大きく変わっていること・既成事実化することです。"},
+    {t:"「もとより」",o:["元の場所から。","当然のこと・言うまでもなく。","最初から計画した通り。","根本的な問題として。"],a:1,e:"「もとより」は「もちろん・言うまでもなく・始めから」という意味の副詞です。"},
+    {t:"「取り付く島もない」",o:["困っていて助けを求めている。","話しかけても全く相手にされない。","問題が複雑で解決策がない。","孤立して味方がいない。"],a:1,e:"「取り付く島もない（とりつくしまもない）」は話しかけても相手にされず手がかりもないことです。"},
+    {t:"「押しが強い」",o:["体力・腕力がある。","強引に自分の意見・要求を通そうとする。","応援・支援をしっかりしてくれる。","責任感が強い。"],a:1,e:"「押しが強い（おしがつよい）」は自分の意見や要求を強引に通そうとする・遠慮なく主張する様子です。"},
+    {t:"「耳が肥える（みみがこえる）」",o:["多くの情報を集める能力がある。","音楽などを聴く経験が豊富で鑑賞眼がある。","人の話をよく聞く姿勢がある。","内緒話を聞く機会が多い。"],a:1,e:"「耳が肥える」は良い音楽などを多く聴いて鑑賞眼・判別眼が優れていることです。"},
+    {t:"「五十歩百歩（ごじっぽひゃっぽ）」",o:["わずかな差があるが本質的には同じであること。","優れたものと劣ったものの差は大きいこと。","段階的に物事を進めるべきこと。","多数対少数の戦いのこと。"],a:0,e:"「五十歩百歩」は多少の違いはあっても本質的には同じようなものだというたとえです。"},
+    {t:"「臥薪嘗胆（がしんしょうたん）」",o:["苦しい状況から逃げること。","目的達成のために苦労・苦難に耐えること。","過去の失敗を後悔し続けること。","無理な計画を強行すること。"],a:1,e:"「臥薪嘗胆（がしんしょうたん）」は目的を達成するために辛苦に耐え努力することです。復讐を誓って苦しみに耐えた故事から。"},
+    {t:"「付け焼き刃（つけやきば）」",o:["古くなった道具を修理して使うこと。","その場しのぎで身につけた知識・技能。","切れ味の良い鋭い批評のこと。","長年の努力で磨かれた技術のこと。"],a:1,e:"「付け焼き刃」は一時的にごまかすだけの浅い知識・技術のことです。試験前の詰め込み勉強などに使います。"},
+    {t:"「蛇足（だそく）」",o:["慎重すぎて行動が遅いこと。","余計な付け加えで全体をこわすもの。","問題の核心から外れた議論。","他人の失敗を利用すること。"],a:1,e:"「蛇足（だそく）」はなくてもよい余計なものを付け加えること。蛇に足を描いてしまう故事から。"},
+  ]
+},
+
+// ════════════════════════════════════════════
+// 問題５　文の文法
+// ════════════════════════════════════════════
+grammar: {
+  name:"問題５　文の文法",
+  desc:"（　）に入れるのに最もよいものを１〜４から選んでください。",
+  questions:[
+    {t:"長年の努力が実を結び、彼女は夢（　）大学に入学することができた。",o:["に向けての","であった","での","への"],a:1,e:"「彼女の夢であった大学」＝「彼女が夢見ていた大学」という同格の形が自然です。"},
+    {t:"子供のころ親しんだ故郷の景色は、何十年経った今（　）、脳裏に焼き付いている。",o:["もなお","にして","とはいえ","ともなると"],a:0,e:"「今もなお」は現在においてもまだ続いているという状態を強調する表現です。"},
+    {t:"このプロジェクトが失敗した（　）、責任をとって辞任するつもりだ。",o:["としたら","ようでは","にしては","暁には"],a:3,e:"「〜暁には（あかつきには）」は〜した場合には・その時には、という意味です。"},
+    {t:"新入社員（　）、敬語の使い方が完全でないのは仕方がないとも言える。",o:["にとって","からすれば","とあれば","だけあって"],a:2,e:"「〜とあれば」はその立場・状況であれば、という条件を示す表現です。"},
+    {t:"環境が整えば整う（　）、彼女の研究はより深まっていった。",o:["ほど","につれ","ほどに","だけ"],a:0,e:"「〜ば〜ほど」は比例表現で「条件が変化するにつれてそれに応じてより〜になる」という意味です。"},
+    {t:"彼の無実は証明されて（　）。",o:["しまった","みせた","いた","よかった"],a:0,e:"「〜てしまった」は残念・後悔・意外な完了を表します。ここでは無実が証明された良い結果でも感嘆的に使います。"},
+    {t:"失敗を（　）、次のステップに進む勇気を持つことが大切だ。",o:["恐れつつも","恐れながらも","恐れずとも","恐れてこそ"],a:3,e:"「〜てこそ」はそうするからこそ・それがあってはじめて、という強調表現です。"},
+    {t:"彼女がその場を（　）、全員が安心した。",o:["仕切ってこそ","仕切るなり","仕切るや否や","仕切るにあたって"],a:2,e:"「〜るや否や（やいなや）」はある動作が終わるとほぼ同時に次の動作が起きるという表現です。"},
+    {t:"努力さえ（　）、必ず目標は達成できる。",o:["すれば","したなら","したとて","するだけで"],a:0,e:"「さえ〜ば」は〜だけすれば十分だという意味の条件表現です。「努力さえすれば」＝努力するという条件さえあれば。"},
+    {t:"彼は怒るどころか、笑って（　）。",o:["やまなかった","しまわなかった","みせた","くれた"],a:2,e:"「笑ってみせた」は意志的にそのような行動を取ったことを強調する表現です。"},
+    {t:"今回の件はご迷惑をおかけした（　）であり、深く反省しております。",o:["こと","次第","わけ","もの"],a:1,e:"「〜た次第（しだい）である」は事情・経緯を丁寧に説明する改まった表現です。"},
+    {t:"社長の判断（　）、この方針が決まったわけです。",o:["として","によって","にあって","にかけて"],a:1,e:"「〜によって」は手段・原因・主体などを示す助詞です。「社長の判断によって決まった」が正しい用法です。"},
+    {t:"彼女は泣きたい（　）、笑顔で見送った。",o:["に違いなく","くせして","はずが","のを抑えて"],a:3,e:"「〜のを抑えて（おさえて）」は感情・衝動を抑制してという意味です。「泣きたいのを抑えて笑顔で」は感情を我慢した状況を表します。"},
+    {t:"あれほど警告した（　）、彼は同じ失敗を繰り返した。",o:["のに","ものの","としても","だけで"],a:0,e:"「〜のに」は期待・当然の結果と反する事態を表す逆接の接続助詞です。"},
+    {t:"彼女の実力（　）、この程度の試験は難しくないはずだ。",o:["からして","をもって","にして","をもってすれば"],a:3,e:"「〜をもってすれば」はその能力・手段があれば、という仮定を表す高度な表現です。"},
+    {t:"成功（　）失敗（　）、最後まで全力を尽くすことが大切だ。",o:["にしても／にしても","であれ／であれ","ながら／ながら","とも／とも"],a:1,e:"「〜であれ〜であれ」はどちらの場合であっても、という条件を列挙する表現です。"},
+    {t:"そこまで言われる（　）もないだろうに、と彼女は思った。",o:["いわれ","道理","理由","はず"],a:0,e:"「〜いわれ（言われ）もない」はそうされる・言われる理由・道理がないという意味の慣用表現です。"},
+    {t:"彼は部下の失敗を（　）、黙って見守った。",o:["知りながらも","知りつつも","知るといえども","知ったものの"],a:1,e:"「〜つつも」は〜しながらも、という逆接を表す表現です。「知りつつも見守った」は知っていながら介入しなかったことを表します。"},
+    {t:"会議の結論は、予算を削減する（　）ものだった。",o:["というより","いかんによらず","にほかならない","よりほかない"],a:2,e:"「〜にほかならない」はまさに〜だ・〜以外の何ものでもない、という強い断定表現です。"},
+    {t:"どんなに技術が進歩しようとも、人の心（　）変えられない問題はある。",o:["だけでは","でさえ","のみでは","をしても"],a:1,e:"「〜でさえ」は極端な例を示して「そのようなものでも」という強調を表します。「人の心でさえ変えられない」＝人の力の限界を表します。"},
+    {t:"事の重大さに気づいた時には、手遅れ（　）。",o:["になってしまっていた","にもなかった","になれるはずだった","になったものだ"],a:0,e:"「〜になってしまっていた」は気づいた時点では既にその状態になっていた、という後悔・遺憾の表現です。"},
+    {t:"この作品は読む（　）読むほど、深みが増す。",o:["が","に","と","ば"],a:3,e:"「読めば読むほど」は「〜ば〜ほど」の比例表現です。「読む」の条件形「読めば」と組み合わせます。"},
+    {t:"規則である（　）、例外なく全員に適用される。",o:["以上は","限り","からには","上は"],a:0,e:"「〜である以上は」はその事実・立場である以上当然、という帰結表現です。"},
+    {t:"彼女にとって、音楽は生きる（　）となっている。",o:["よりどころ","指針","拠点","基盤"],a:0,e:"「よりどころとなる」は精神的な支え・頼みとするものになる、という意味です。「心のよりどころ」という使い方が典型的です。"},
+    {t:"締め切りに間に合わせる（　）、徹夜で作業した。",o:["ために","べく","ことで","ものの"],a:1,e:"「〜べく」は〜するために・〜しようとして、という目的を表す古風な表現です。書き言葉でよく使われます。"},
+    {t:"これほどの難問、専門家（　）解けないかもしれない。",o:["でないと","さえも","のみで","だけでは"],a:1,e:"「専門家でさえも」は最も解ける可能性の高い専門家でも無理かもしれない、という極端な例の強調です。"},
+    {t:"彼は昨日からずっと（　）がしている。",o:["何か嫌な予感","頭痛い気","なんとなく心配","気になること"],a:0,e:"「〜がしている」は感覚的な状態を表します。「嫌な予感がしている」は不安・胸騒ぎの感覚を表す表現です。"},
+    {t:"試験範囲が広い（　）、何から勉強すれば良いかわからない。",o:["とあって","ので","だけに","せいで"],a:2,e:"「〜だけに」はそれだけの理由・それゆえに、という因果を強調する表現です。"},
+    {t:"そのような発言をする（　）、彼は本当に反省しているのだろうか。",o:["くらいなら","ぐらいだから","となると","とはいうものの"],a:1,e:"「〜ぐらいだから」はその行動・状態を根拠に推測する表現です。「そんな発言をするぐらいだから（反省してないだろう）」という推測の論理です。"},
+    {t:"失敗を恐れる（　）挑戦しなければ、成長はない。",o:["あまり","ゆえに","ばかりに","一方で"],a:0,e:"「〜あまり（余り）」は程度が過ぎることで、という意味。「恐れるあまり挑戦しない」＝恐れが強すぎて行動できないことを表します。"},
+    {t:"彼女が何も言わなかった（　）、賛成しているわけではない。",o:["からこそ","からといって","以上","だけに"],a:1,e:"「〜からといって」は〜だからといって当然そうだとは限らない、という注意・否定の表現です。"},
+    {t:"今となっては（　）、あの時もっと努力すべきだったと思う。",o:["ことだし","ことだが","ことで","ことに"],a:1,e:"「今となっては〜が」は現在の視点から過去を振り返り後悔する逆接表現の定型表現です。"},
+    {t:"実力（　）、今の彼には荷が重すぎるポジションだ。",o:["なくして","からして","はともかく","はさておき"],a:2,e:"「実力はともかく（として）」は実力の問題は別にして、という意味で脇に置く表現です。"},
+    {t:"そんなに心配する（　）もない。きっとうまくいくさ。",o:["こと","はず","もの","わけ"],a:0,e:"「〜することもない」はする必要・理由がない、という意味です。「心配することもない」＝心配する必要はない。"},
+    {t:"彼は忙しさを（　）に、大切な連絡を怠った。",o:["言い訳","理由","口実","名目"],a:2,e:"「〜を口実（こうじつ）に」は都合のいい言い訳として利用するという意味です。「忙しさを口実にする」が慣用的表現。"},
+    {t:"これほどの実績がある（　）、彼を信頼しないわけにはいかない。",o:["以上","のだから","だけに","とあれば"],a:2,e:"「〜だけに」はそれだけの根拠・理由があるからこそ、という強調表現です。実績があるからこそ信頼せざるを得ない、という文脈に合います。"},
+    {t:"体調が悪い（　）無理をするな、と医者に言われた。",o:["ならでは","なのに","くせに","のだから"],a:3,e:"「〜のだから」は〜という事情・理由があるのだから、という論拠を示す表現です。「体調が悪いのだから無理をするな」が自然です。"},
+    {t:"この問題を解決する（　）力が、今の私たちには求められている。",o:["に足る","だけの","ための","べき"],a:1,e:"「〜だけの力」は〜するのに十分な・必要なレベルの、という意味です。「解決するだけの力」＝解決するに必要な力。"},
+    {t:"彼女は英語（　）フランス語（　）話せる。",o:["はもちろん／も","だけでなく／までも","のみならず／さえ","のみ／のみ"],a:0,e:"「〜はもちろん〜も」は言うまでもなく〜に加えて〜もという追加表現です。"},
+    {t:"問題が複雑（　）、簡単には解決できない。",o:["なだけに","なので","とあれば","にして"],a:0,e:"「〜なだけに」は〜という特性・事情があるからこそ、という強調を伴う因果表現です。"},
+    {t:"今回の件については、担当者に（　）説明させていただきます。",o:["おいて","かけて","よって","させて"],a:0,e:"「〜において説明させていただきます」より「担当者に説明させていただきます」＝担当者が説明するという意味の敬語表現です。ここでは「担当者に（代わって）」という意味合い。"},
+    {t:"彼の努力は（　）にして、その結果はついてこなかった。",o:["甲斐なし","甲斐あり","甲斐ある","甲斐なく"],a:3,e:"「〜にして甲斐なく（かいなく）」はその努力・行為が効果を発揮できなかったという表現です。「甲斐なく」は報われない・効果がないという意味。"},
+    {t:"試験が終わった（　）、全員が安堵の表情を見せた。",o:["とたんに","なり","やいなや","が最後"],a:0,e:"「〜たとたんに」はある動作が完了した瞬間すぐに次のことが起きるという表現です。"},
+    {t:"どんな困難（　）立ち向かう覚悟ができている。",o:["にも","でも","とも","にして"],a:1,e:"「どんな〜でも」はいかなる〜であっても・どのような〜に対しても、という包括的な条件表現です。"},
+    {t:"彼女の才能は、努力（　）輝くものだ。",o:["あっての","なくての","とあっての","によっての"],a:0,e:"「〜あっての」はそれがあってはじめて成り立つという意味。「努力あっての才能」＝努力があってこそ才能が活きる。"},
+    {t:"社会人になった（　）、自立しなければならない。",o:["からには","以上は","上は","からは"],a:0,e:"「〜からには」は〜した以上は当然そうすべきだ、という責任・当然を表す表現です。"},
+    {t:"どれほど批判されようとも、自分の信念を（　）。",o:["曲げるべきではない","曲げてはならない","曲げるわけにはいかない","曲げることはない"],a:2,e:"「〜わけにはいかない」は〜することが状況・常識・道義上できない、という表現です。信念を曲げることは道義的にできない、という強い意志を表します。"},
+    {t:"この計画の実現は難しい（　）、不可能ではないと思う。",o:["ようで","にしても","にもかかわらず","ものの"],a:3,e:"「〜ものの」は〜だが・〜しかし、という逆接表現です。「難しいものの不可能ではない」が正しい用法です。"},
+    {t:"彼の話は面白い（　）、時々話が長すぎるのが難点だ。",o:["だけに","はいいが","とはいえ","とあって"],a:1,e:"「〜はいいが・いいのだが」は〜は良い点だが〜という問題点がある、という部分肯定・逆接表現です。"},
+    {t:"彼女は悲しみを（　）、笑顔を絶やさなかった。",o:["知りながら","こらえつつ","こらえながら","抑えながらも"],a:1,e:"「〜つつ」は〜しながら・〜する一方で、という同時進行または対比を表す表現です。「悲しみをこらえつつ笑顔を見せる」がより文語的表現です。"},
+    {t:"あの映画は一度見た（　）、もう一度見てみたくなる。",o:["限りでは","はずでは","だけでは","くらいでは"],a:2,e:"「一度見ただけでは」は一回見るだけでは十分ではない・物足りないという意味です。もう一度見たくなるという文脈と合います。"},
+  ]
+}
+
+}; // END DATA
+
+// ─────────────────────────────────────────────
+// State
+// ─────────────────────────────────────────────
+let state = { correct:0, wrong:0, answered:0, total:0 };
+
+function loadSection() {
+  const id = document.getElementById('sectionSelect').value;
+  const area = document.getElementById('questionArea');
+  if (!id) {
+    area.innerHTML = '<div class="empty-state">上のメニューから問題を選んでください</div>';
+    document.getElementById('scoreBar').style.display = 'none';
+    return;
+  }
+  const sec = DATA[id];
+  state = { correct:0, wrong:0, answered:0, total: sec.questions.length };
+  document.getElementById('scoreBar').style.display = 'flex';
+  updateScore();
+
+  let html = `<div class="section-info">📌 ${sec.name}　　${sec.desc}</div>`;
+  sec.questions.forEach((q, i) => {
+    const qn = i + 1;
+    html += buildQuestion(id, qn, q);
   });
+  area.innerHTML = html;
+}
 
-  function updateProgress() {
-    let answered = 0;
-    for (let i = 1; i <= TOTAL; i++) {
-      const sel = document.querySelector(`input[name="q${i}"]:checked`);
-      if (sel) answered++;
-    }
-    document.getElementById('progressLabel').textContent = `${answered} / ${TOTAL} 問 回答済み`;
-    document.getElementById('progressFill').style.width = `${(answered/TOTAL)*100}%`;
+function buildQuestion(secId, qn, q) {
+  const labels = ['１','２','３','４'];
+  let opts = q.o.map((o,i) => `
+    <label class="opt" id="opt_${secId}_${qn}_${i}" onclick="selectOpt('${secId}',${qn},${i})">
+      <input type="radio" name="q_${secId}_${qn}" value="${i}">
+      <span class="opt-lbl">${labels[i]}</span>${o}
+    </label>`).join('');
+
+  return `
+  <div class="q-block" id="qblock_${secId}_${qn}">
+    <div class="q-num">問 ${qn}</div>
+    <div class="q-text">${q.t}</div>
+    <div class="options">${opts}</div>
+    <button class="check-btn" id="chkbtn_${secId}_${qn}" onclick="checkAnswer('${secId}',${qn})">この問題を確認する ▶</button>
+    <div class="result-box" id="res_${secId}_${qn}"></div>
+  </div>`;
+}
+
+function selectOpt(secId, qn, idx) {
+  const sec = DATA[secId];
+  const q = sec.questions[qn - 1];
+  // Already answered?
+  const resBox = document.getElementById(`res_${secId}_${qn}`);
+  if (resBox.style.display === 'block') return;
+
+  // Clear selection style
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById(`opt_${secId}_${qn}_${i}`);
+    if (el) el.classList.remove('sel');
+  }
+  document.getElementById(`opt_${secId}_${qn}_${idx}`).classList.add('sel');
+  document.getElementById(`chkbtn_${secId}_${qn}`).style.display = 'inline-block';
+}
+
+function checkAnswer(secId, qn) {
+  const sec = DATA[secId];
+  const q = sec.questions[qn - 1];
+  const selected = document.querySelector(`input[name="q_${secId}_${qn}"]:checked`);
+  if (!selected) return;
+
+  const userAns = parseInt(selected.value);
+  const correct = q.a;
+  const isCorrect = (userAns === correct);
+
+  // Style options
+  for (let i = 0; i < q.o.length; i++) {
+    const el = document.getElementById(`opt_${secId}_${qn}_${i}`);
+    if (!el) continue;
+    el.classList.remove('sel');
+    if (i === correct) el.classList.add('ok');
+    else if (i === userAns && !isCorrect) el.classList.add('ng');
+    // disable
+    el.style.pointerEvents = 'none';
   }
 
-  function submitTest(forced = false) {
-    // 未回答チェック
-    let unanswered = [];
-    for (let i = 1; i <= TOTAL; i++) {
-      const sel = document.querySelector(`input[name="q${i}"]:checked`);
-      if (!sel) unanswered.push(i);
-    }
-    if (!forced && unanswered.length > 0) {
-      const warn = document.getElementById('answeredWarning');
-      warn.style.display = 'block';
-      warn.textContent = `⚠ 問 ${unanswered.join('、')} がまだ回答されていません。このまま採点しますか？もう一度ボタンを押してください。`;
-      submitTest._pendingConfirm = true;
-      if (!submitTest._pendingConfirm) return;
-    }
-    submitTest._pendingConfirm = false;
-    document.getElementById('answeredWarning').style.display = 'none';
+  // Disable radios
+  document.querySelectorAll(`input[name="q_${secId}_${qn}"]`).forEach(r => r.disabled = true);
 
-    clearInterval(timerInterval);
+  // Hide button
+  const btn = document.getElementById(`chkbtn_${secId}_${qn}`);
+  btn.style.display = 'none';
 
-    let correct = 0;
-    let sectionScore = { kanji:0, vocab:0, usage:0, grammar:0 };
+  // Show result
+  const resBox = document.getElementById(`res_${secId}_${qn}`);
+  const icon = isCorrect ? '✅ 正解！' : `❌ 不正解　正解は「${q.o[correct]}」`;
+  resBox.className = `result-box ${isCorrect ? 'correct-res' : 'wrong-res'}`;
+  resBox.innerHTML = `<div class="result-icon">${icon}</div><div class="exp-text">💡 ${q.e}</div>`;
+  resBox.style.display = 'block';
 
-    for (let i = 1; i <= TOTAL; i++) {
-      const sel = document.querySelector(`input[name="q${i}"]:checked`);
-      const block = document.querySelector(`[data-q="${i}"]`);
-      const correctAns = answers[i];
-      const userAns = sel ? parseInt(sel.value) : null;
+  // Update state
+  state.answered++;
+  if (isCorrect) state.correct++; else state.wrong++;
+  updateScore();
+}
 
-      // 全オプションをリセット
-      if (block) {
-        block.querySelectorAll('.option').forEach(opt => {
-          opt.classList.remove('selected','correct','wrong');
-        });
-
-        // 正解を緑に
-        const correctOpt = block.querySelector(`input[value="${correctAns}"]`);
-        if (correctOpt) correctOpt.closest('.option').classList.add('correct');
-
-        // 不正解を赤に
-        if (userAns && userAns !== correctAns) {
-          const wrongOpt = block.querySelector(`input[value="${userAns}"]`);
-          if (wrongOpt) wrongOpt.closest('.option').classList.add('wrong');
-        }
-
-        // 解説を表示
-        const exp = block.querySelector('.explanation');
-        if (exp) exp.classList.add('show');
-      }
-
-      if (userAns === correctAns) {
-        correct++;
-        for (const [sec, qs] of Object.entries(sections)) {
-          if (qs.includes(i)) { sectionScore[sec]++; break; }
-        }
-      }
-    }
-
-    // 全ラジオを無効化
-    document.querySelectorAll('input[type="radio"]').forEach(r => r.disabled = true);
-
-    // 結果表示
-    const pct = Math.round((correct / TOTAL) * 100);
-    let grade, msg, sub, ringClass;
-    if (pct >= 90) { grade='S'; msg='素晴らしい！ほぼ満点です！'; sub='N1合格ラインを大きく超えています。'; ringClass='grade-S'; }
-    else if (pct >= 75) { grade='A'; msg='合格圏内！よく出来ました。'; sub='N1合格の可能性が高いです。弱点を確認しましょう。'; ringClass='grade-A'; }
-    else if (pct >= 60) { grade='B'; msg='あと少し！もう一頑張り。'; sub='基礎はできています。難しい文法・語彙を強化しましょう。'; ringClass='grade-B'; }
-    else if (pct >= 40) { grade='C'; msg='まだ伸びしろがあります。'; sub='語彙と文法の基礎から再確認しましょう。'; ringClass='grade-C'; }
-    else { grade='D'; msg='基礎からしっかり学び直しましょう。'; sub='N2レベルの復習から始めることをお勧めします。'; ringClass='grade-D'; }
-
-    const ring = document.getElementById('scoreRing');
-    ring.className = `score-ring ${ringClass}`;
-    document.getElementById('scoreNum').textContent = correct;
-    document.getElementById('gradeMsg').textContent = `${msg}（評価：${grade}）`;
-    document.getElementById('gradeSub').textContent = sub;
-    document.getElementById('bdKanji').textContent = `${sectionScore.kanji}/5`;
-    document.getElementById('bdVocab').textContent = `${sectionScore.vocab}/12`;
-    document.getElementById('bdGrammar').textContent = `${sectionScore.grammar}/13`;
-    document.getElementById('bdUsage').textContent = `${sectionScore.usage}/5`;
-    document.getElementById('bdTotal').textContent = `${pct}%`;
-
-    const panel = document.getElementById('resultPanel');
-    panel.classList.add('show');
-    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-  submitTest._pendingConfirm = false;
-
-  function resetTest() {
-    if (!confirm('最初からやり直しますか？すべての回答がリセットされます。')) return;
-    location.reload();
-  }
-
-  function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+function updateScore() {
+  document.getElementById('scCorrect').textContent = state.correct;
+  document.getElementById('scWrong').textContent = state.wrong;
+  const pct = state.answered > 0 ? Math.round(state.correct / state.answered * 100) + '%' : '—';
+  document.getElementById('scPct').textContent = pct;
+  document.getElementById('progLbl').textContent = `${state.answered} / ${state.total} 問 回答済み`;
+  document.getElementById('progFill').style.width = state.total > 0 ? `${state.answered/state.total*100}%` : '0%';
+}
 </script>
-
 </body>
 </html>
